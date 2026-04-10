@@ -11,3 +11,6 @@ export const getMeAPI = () =>
 
 export const logoutUserAPI = () =>
   API.post("/auth/logout");
+
+export const updateNameAPI = (data) =>
+  API.put("/auth/update-name", data);

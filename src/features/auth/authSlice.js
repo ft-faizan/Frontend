@@ -4,6 +4,7 @@ import {
   loginUserAPI,
   getMeAPI,
   logoutUserAPI,
+  updateNameAPI,
 } from "./authAPI.js";
 
 // 🔥 THUNKS (async actions)
@@ -15,7 +16,7 @@ export const registerUser = createAsyncThunk(
       const res = await registerUserAPI(data);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );
@@ -27,19 +28,24 @@ export const loginUser = createAsyncThunk(
       const res = await loginUserAPI(data);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );
+
+
 
 export const getMe = createAsyncThunk(
   "auth/me",
   async (_, thunkAPI) => {
     try {
+      console.log("🔥 Calling /me API"); // 👈 ADD
       const res = await getMeAPI();
+      console.log("✅ /me response:", res.data); // 👈 ADD
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
+      console.log("❌ /me error:", err.response); // 👈 ADD
+      return thunkAPI.rejectWithValue(err.response?.data?.message);
     }
   }
 );
@@ -51,11 +57,23 @@ export const logoutUser = createAsyncThunk(
       const res = await logoutUserAPI();
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );
 
+
+export const updateName = createAsyncThunk(
+  "auth/updateName",
+  async (data, thunkAPI) => {
+    try {
+      const res = await updateNameAPI(data);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message);
+    }
+  }
+);
 // 🔥 SLICE
 
 const authSlice = createSlice({
@@ -64,6 +82,7 @@ const authSlice = createSlice({
     user: null,
     loading: false,
     error: null,
+    isAuthChecked: false,
   },
 
   reducers: {},
@@ -74,9 +93,10 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
       })
+
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user; // ✅ FIX
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -84,18 +104,35 @@ const authSlice = createSlice({
       })
 
       // register
-      .addCase(registerUser.fulfilled, (state) => {
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload.user; // ✅ IMPORTANT
       })
 
       // getMe
+
+      .addCase(getMe.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(getMe.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthChecked = true;
+      })
+      .addCase(getMe.rejected, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthChecked = true;
+      })
+      // edit user name
+      .addCase(updateName.fulfilled, (state, action) => {
+        state.user = action.payload.user;
       })
 
       // logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+        state.isAuthChecked = true;
       });
   },
 });

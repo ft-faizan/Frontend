@@ -1,15 +1,23 @@
 import { useTheme } from "../../context/ThemeContext.jsx";
-
+import { useToast } from "../../context/ToastContext.jsx";
 export default function ThemeToggle() {
   const { dark, setDark } = useTheme();
+  const { showToast } = useToast();
 
   return (
     <label className="relative inline-flex items-center cursor-pointer">
-      
       <input
         type="checkbox"
         checked={dark}
-        onChange={() => setDark(!dark)}
+        onChange={() => {
+          const newMode = !dark;
+          setDark(newMode);
+
+          showToast(
+            newMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️",
+            "success",
+          );
+        }}
         className="sr-only peer"
       />
 
@@ -18,7 +26,6 @@ export default function ThemeToggle() {
 
       {/* Thumb */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#283FE1] dark:bg-zinc-800 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ease-in-out peer-checked:left-[calc(100%-2rem)] peer-active:scale-95">
-
         {/* Sun Icon */}
         <svg
           className={`w-4 h-4 text-white transition-opacity duration-300 ${

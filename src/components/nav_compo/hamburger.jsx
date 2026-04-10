@@ -1,0 +1,82 @@
+import styled from 'styled-components';
+
+const Button = () => {
+  return (
+    <StyledWrapper>
+      <div className="background">
+        <button className="menu__icon">
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+    </StyledWrapper>
+  );
+}
+
+const StyledWrapper = styled.div`
+  /* <reset-style> ============================ */
+  button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  /* ============================ */
+  /* <style for bg> ======== */
+  .background {
+    border-radius: 16px;
+    border: 1px solid #1a1a1a;
+    background: rgba(74, 74, 74, 0.39);
+    mix-blend-mode: luminosity;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.20);
+    backdrop-filter: blur(15px);
+    width: 65px;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* <style for menu__icon> ======== */
+  .menu__icon {
+    width: 28px;
+    height: 28px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .menu__icon span {
+    width: 100%;
+    height: 0.125rem;
+    border-radius: 0.125rem;
+    background-color: rgb(0, 122, 255);
+    box-shadow: 0 .5px 2px 0 hsla(0, 0%, 0%, .2);
+    transition: transform .4s, background-color .4s, width .4s, opacity .4s;
+  }
+
+  .menu__icon span:nth-child(2) {
+    width: 60%;
+  }
+
+  .menu__icon:hover span:nth-child(1) {
+    background-color: rgb(255, 59, 48);
+    transform: translateY(7.5px) rotate(-45deg);
+  }
+
+  .menu__icon:hover span:nth-child(2) {
+    width: 0;
+    opacity: 0;
+  }
+
+  .menu__icon:hover span:nth-child(3) {
+    background-color: rgb(255, 59, 48);
+    transform: translateY(-7.5px) rotate(45deg);
+  }`;
+
+export default Button;

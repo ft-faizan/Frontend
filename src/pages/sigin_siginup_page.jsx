@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import loginImg from "../assets/auth.img.png";
 import logo from "../assets/logo.png";
@@ -470,7 +469,7 @@ export default function Signin_Signup_page() {
             </div>
           </div>
         </div>
-        
+
         {/* ── RIGHT ── */}
         <div className="ts-right">
           {/* Header with Logo & Name */}
@@ -483,8 +482,6 @@ export default function Signin_Signup_page() {
               <p className="ts-brand-tagline">Save smarter, not harder</p>
             </div>
           </div>
-
-         
           <Signin_signup_form />
         </div>
       </div>

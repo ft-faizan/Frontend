@@ -1,4 +1,4 @@
-function about_page() {
+function About_page() {
     return (
         <>
         <div>
@@ -10,4 +10,4 @@ function about_page() {
     );
 }
 
-export default about_page;
+export default About_page;
