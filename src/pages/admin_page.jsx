@@ -35,7 +35,7 @@ function Admin_page() {
   const { stats } = useSelector((state) => state.categories);
 
   const totalCategories = stats.totalCategories;
-const myCategories = stats.myCategories;
+  const myCategories = stats.myCategories;
 
   useEffect(() => {
     dispatch(
@@ -253,9 +253,7 @@ const myCategories = stats.myCategories;
 
       {/* tabnitaion three */}
 
-      {activeTab === "tools" && (
-         <AdminToolList categories={categories} />
-      )}
+      {activeTab === "tools" && <AdminToolList categories={categories} />}
     </>
   );
 }

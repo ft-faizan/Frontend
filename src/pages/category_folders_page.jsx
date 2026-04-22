@@ -1,13 +1,3 @@
-// function Category_folders_page() {
-//     return (
-//         <>
-//             <h1>Category folders</h1>
-//         </>
-//     );
-// }
-
-// export default Category_folders_page;
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,32 +23,41 @@ function Category_folders_page() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedTool, setSelectedTool] = useState(null);
 
+  const { categories } = useSelector((state) => state.categories);
+  const { user } = useSelector((state) => state.auth);
+
+  // const role = user.role;
+
   // 🔥 FETCH TOOLS BY CATEGORY
   useEffect(() => {
     const fetch = async () => {
       const res = await dispatch(
+        // getTools({
+        //   category: id,
+        //   search,
+        //   page: currentPage,
+        //   limit: 10,
+        //   // mode: "admin", // 🔥 important for edit/delete
+        // }),
         getTools({
           category: id,
           search,
           page: currentPage,
           limit: 10,
-          mode: "admin", // 🔥 important for edit/delete
-        })
+        mode: window.location.pathname.includes("admin") ? "admin" : undefined // 🔥 KEY FIX
+        }),
       );
 
       setPages(res.payload?.pages || 1);
     };
 
     fetch();
-  }, [dispatch, id, search, currentPage]);
+  }, [dispatch, id, search, currentPage, user]);
 
   return (
     <div className="p-6">
-
       {/* HEADER */}
-      <h1 className="text-2xl font-bold mb-4">
-        Category Tools
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">Category Tools</h1>
 
       {/* SEARCH */}
       <input
@@ -79,15 +78,10 @@ function Category_folders_page() {
           <p className="p-4">No tools found</p>
         ) : (
           tools.map((tool) => (
-            <div
-              key={tool._id}
-              className="p-4 border-b flex justify-between"
-            >
+            <div key={tool._id} className="p-4 border-b flex justify-between">
               <div>
                 <p className="font-bold">{tool.name}</p>
-                <p className="text-sm text-gray-500">
-                  {tool.category?.name}
-                </p>
+                <p className="text-sm text-gray-500">{tool.category?.name}</p>
               </div>
 
               <div>
@@ -102,9 +96,7 @@ function Category_folders_page() {
                 </button>
 
                 <button
-                  onClick={() =>
-                    dispatch(deleteTool(tool._id))
-                  }
+                  onClick={() => dispatch(deleteTool(tool._id))}
                   className="text-red-500 ml-3"
                 >
                   Delete
@@ -133,14 +125,27 @@ function Category_folders_page() {
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         initialData={selectedTool}
-        categories={[]} // optional if needed
+        categories={categories}
         onSubmit={async (formData) => {
           await dispatch(
             updateTool({
               id: selectedTool._id,
               data: formData,
-            })
+            }),
           );
+
+          const res = await dispatch(
+            getTools({
+              category: id,
+              search,
+              page: currentPage,
+              limit: 10,
+             mode: window.location.pathname.includes("admin") ? "admin" : undefined
+            }),
+          );
+
+          setPages(res.payload?.pages || 1);
+
           setOpenModal(false);
         }}
       />

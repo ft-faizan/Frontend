@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
+import CategorySelect from "./CategorySelect.jsx";
 
-function ToolModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  initialData,
-  categories,
-}) {
+function ToolModal({ isOpen, onClose, onSubmit, initialData, categories }) {
   const [form, setForm] = useState({
     name: "",
     link: "",
@@ -32,7 +27,6 @@ function ToolModal({
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg w-full max-w-md">
-
         <h2 className="text-xl font-bold mb-4">
           {initialData ? "Edit Tool" : "Create Tool"}
         </h2>
@@ -41,9 +35,7 @@ function ToolModal({
         <input
           placeholder="Tool Name"
           value={form.name}
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
           className="w-full p-2 border mb-3"
         />
 
@@ -51,9 +43,7 @@ function ToolModal({
         <input
           placeholder="Website Link"
           value={form.link}
-          onChange={(e) =>
-            setForm({ ...form, link: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, link: e.target.value })}
           className="w-full p-2 border mb-3"
         />
 
@@ -61,14 +51,12 @@ function ToolModal({
         <textarea
           placeholder="Description"
           value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="w-full p-2 border mb-3"
         />
 
         {/* CATEGORY */}
-        <select
+        {/* <select
           value={form.category}
           onChange={(e) =>
             setForm({ ...form, category: e.target.value })
@@ -81,14 +69,17 @@ function ToolModal({
               {cat.name}
             </option>
           ))}
-        </select>
+        </select> */}
+        <CategorySelect
+          categories={categories}
+          value={form.category}
+          onChange={(val) => setForm({ ...form, category: val })}
+        />
 
         {/* IMAGE */}
         <input
           type="file"
-          onChange={(e) =>
-            setForm({ ...form, image: e.target.files[0] })
-          }
+          onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
           className="mb-3"
         />
 

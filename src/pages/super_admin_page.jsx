@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getCategories } from "../features/categories/categorySlice.js";
-import { getCategoryStats,getUsers,updateCategory, 
-  deleteCategory } from "../features/categories/categorySlice.js";
-  import { getUserStats } from "../features/categories/categorySlice.js";
+import {
+  getCategoryStats,
+  getUsers,
+  updateCategory,
+  deleteCategory,
+} from "../features/categories/categorySlice.js";
+import { getUserStats } from "../features/categories/categorySlice.js";
 
 import { useToast } from "../context/ToastContext.jsx";
 
@@ -59,8 +63,8 @@ function Super_admin_page() {
   }, [dispatch]);
 
   useEffect(() => {
-  dispatch(getUserStats());
-}, [dispatch]);
+    dispatch(getUserStats());
+  }, [dispatch]);
 
   // 🔥 FORMAT
   const formatName = (name) => name.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -97,36 +101,33 @@ function Super_admin_page() {
         </div>
       )} */}
 
+      {activeTab === "dashboard" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* TOTAL CATEGORY */}
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-gray-500 text-sm">Total Categories</h2>
+            <p className="text-3xl font-bold">{stats.totalCategories}</p>
+          </div>
 
-{activeTab === "dashboard" && (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* USERS */}
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-gray-500 text-sm">Total Users</h2>
+            <p className="text-3xl font-bold">{userStats.totalUsers}</p>
+          </div>
 
-    {/* TOTAL CATEGORY */}
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-gray-500 text-sm">Total Categories</h2>
-      <p className="text-3xl font-bold">{stats.totalCategories}</p>
-    </div>
+          {/* ADMINS */}
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-gray-500 text-sm">Total Admins</h2>
+            <p className="text-3xl font-bold">{userStats.totalAdmins}</p>
+          </div>
 
-    {/* USERS */}
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-gray-500 text-sm">Total Users</h2>
-      <p className="text-3xl font-bold">{userStats.totalUsers}</p>
-    </div>
-
-    {/* ADMINS */}
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-gray-500 text-sm">Total Admins</h2>
-      <p className="text-3xl font-bold">{userStats.totalAdmins}</p>
-    </div>
-
-    {/* SUPER ADMINS */}
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-gray-500 text-sm">Super Admins</h2>
-      <p className="text-3xl font-bold">{userStats.totalSuperAdmins}</p>
-    </div>
-
-  </div>
-)}
+          {/* SUPER ADMINS */}
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-gray-500 text-sm">Super Admins</h2>
+            <p className="text-3xl font-bold">{userStats.totalSuperAdmins}</p>
+          </div>
+        </div>
+      )}
 
       {/* ================= CATEGORY TAB ================= */}
       {activeTab === "categories" && (
@@ -183,28 +184,28 @@ function Super_admin_page() {
             ))}
           </select> */}
           <UserDropdown
-  users={users}
-  selectedEmail={selectedEmail}
-  setSelectedEmail={setSelectedEmail}
-  setCurrentPage={setCurrentPage}
-/>
+            users={users}
+            selectedEmail={selectedEmail}
+            setSelectedEmail={setSelectedEmail}
+            setCurrentPage={setCurrentPage}
+          />
 
           <button
-  onClick={() => {
-    setSelectedEmail("all");
-    setSearch("");
-    setCurrentPage(1);
-  }}
-  className="ml-3 text-sm text-red-500"
->
-  Clear Filter
-</button>
+            onClick={() => {
+              setSelectedEmail("all");
+              setSearch("");
+              setCurrentPage(1);
+            }}
+            className="ml-3 text-sm text-red-500"
+          >
+            Clear Filter
+          </button>
 
           {selectedEmail !== "all" && (
-  <p className="mb-3 text-sm text-gray-600">
-    📊 {selectedEmail} created <b>{total}</b> categories
-  </p>
-)}
+            <p className="mb-3 text-sm text-gray-600">
+              📊 {selectedEmail} created <b>{total}</b> categories
+            </p>
+          )}
 
           {/* 📦 LIST */}
           <div className="bg-white shadow rounded-lg">
@@ -318,9 +319,7 @@ function Super_admin_page() {
       )}
 
       {/* ================= TOOLS ================= */}
-      {activeTab === "tools" && (
-         <SuperAdminToolList categories={categories} />
-      )}
+      {activeTab === "tools" && <SuperAdminToolList categories={categories} />}
 
       {/* ================= CREATE ACCOUNT ================= */}
       {activeTab === "create" && (

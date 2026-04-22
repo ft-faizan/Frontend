@@ -29,10 +29,11 @@ function SuperAdminToolList({ categories }) {
 
   // 🔥 FETCH
   useEffect(() => {
+    console.log("🔥 FETCH TOOLS TRIGGERED");
     const fetch = async () => {
       const res = await dispatch(
         getTools({
-          mode: "admin", // 🔥 superadmin sees all
+          
           search,
           category: selectedCategory?._id,
           email: selectedEmail !== "all" ? selectedEmail : undefined,

@@ -29,13 +29,20 @@ function AdminToolList({ categories }) {
   useEffect(() => {
     const fetch = async () => {
       const res = await dispatch(
+        // getTools({
+        //   mode: mode === "admin" ? "admin" : undefined,
+        //   search,
+        //   category: categoryFilter,
+        //   page: currentPage,
+        //   limit: 10,
+        // })
         getTools({
-          mode: mode === "admin" ? "admin" : undefined,
+          mode: "admin", // 🔥 ALWAYS own tools
           search,
           category: categoryFilter,
           page: currentPage,
           limit: 10,
-        })
+        }),
       );
 
       setPages(res.payload?.pages || 1);
@@ -46,7 +53,6 @@ function AdminToolList({ categories }) {
 
   return (
     <div>
-
       {/* 🔥 HEADER */}
       <div className="flex justify-between mb-4">
         <h2 className="text-xl font-bold">Tools</h2>
@@ -75,9 +81,8 @@ function AdminToolList({ categories }) {
 
       {/* 🔥 FILTERS */}
       <div className="flex gap-3 mb-4">
-
         {/* MODE */}
-        <select
+        {/* <select
           value={mode}
           onChange={(e) => {
             setMode(e.target.value);
@@ -86,7 +91,7 @@ function AdminToolList({ categories }) {
         >
           <option value="all">All Tools</option>
           <option value="admin">Created By Me</option>
-        </select>
+        </select> */}
 
         {/* CATEGORY */}
         <select
@@ -126,15 +131,10 @@ function AdminToolList({ categories }) {
           <p className="p-4">No tools</p>
         ) : (
           tools.map((tool) => (
-            <div
-              key={tool._id}
-              className="p-4 border-b flex justify-between"
-            >
+            <div key={tool._id} className="p-4 border-b flex justify-between">
               <div>
                 <p className="font-bold">{tool.name}</p>
-                <p className="text-sm text-gray-500">
-                  {tool.category?.name}
-                </p>
+                <p className="text-sm text-gray-500">{tool.category?.name}</p>
               </div>
 
               <div>
@@ -187,7 +187,7 @@ function AdminToolList({ categories }) {
               updateTool({
                 id: selectedTool._id,
                 data: formData,
-              })
+              }),
             );
           } else {
             await dispatch(createTool(formData));
