@@ -26,3 +26,12 @@ export const createToolAPI = (formData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+  // 📊 ANALYTICS (Add this to your existing imports)
+// export const getAdminStatsAPI = () => 
+//   API.get("/tools/admin-stats");
+
+export const getAdminStatsAPI = (email) => 
+  API.get(`/tools/admin-stats${email ? `?email=${email}` : ""}`);
+
+

@@ -18,7 +18,7 @@ export const registerUser = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
-  }
+  },
 );
 
 export const loginUser = createAsyncThunk(
@@ -30,25 +30,20 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
-  }
+  },
 );
 
-
-
-export const getMe = createAsyncThunk(
-  "auth/me",
-  async (_, thunkAPI) => {
-    try {
-      console.log("🔥 Calling /me API"); // 👈 ADD
-      const res = await getMeAPI();
-      console.log("✅ /me response:", res.data); // 👈 ADD
-      return res.data;
-    } catch (err) {
-      console.log("❌ /me error:", err.response); // 👈 ADD
-      return thunkAPI.rejectWithValue(err.response?.data?.message);
-    }
+export const getMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
+  try {
+    console.log("🔥 Calling /me API"); // 👈 ADD
+    const res = await getMeAPI();
+    console.log("✅ /me response:", res.data); // 👈 ADD
+    return res.data;
+  } catch (err) {
+    console.log("❌ /me error:", err.response); // 👈 ADD
+    return thunkAPI.rejectWithValue(err.response?.data?.message);
   }
-);
+});
 
 export const logoutUser = createAsyncThunk(
   "auth/logout",
@@ -59,9 +54,8 @@ export const logoutUser = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
-  }
+  },
 );
-
 
 export const updateName = createAsyncThunk(
   "auth/updateName",
@@ -72,7 +66,7 @@ export const updateName = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message);
     }
-  }
+  },
 );
 // 🔥 SLICE
 
@@ -85,7 +79,12 @@ const authSlice = createSlice({
     isAuthChecked: false,
   },
 
-  reducers: {},
+  // reducers: {},
+  reducers: {
+    setAuthChecked: (state) => {
+      state.isAuthChecked = true;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -94,9 +93,15 @@ const authSlice = createSlice({
         state.loading = true;
       })
 
+      // .addCase(loginUser.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.user = action.payload.user; // ✅ FIX
+      // })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user; // ✅ FIX
+        state.user = action.payload.user;
+        // ✅ THIS LINE IS IMPORTANT
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

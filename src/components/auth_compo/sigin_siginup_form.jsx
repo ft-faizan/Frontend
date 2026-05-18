@@ -6,9 +6,10 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "../../features/auth/authSlice.js";
+import { loginUser,registerUser,getMe } from "../../features/auth/authSlice.js";
 import { useToast } from "../../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
+
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -303,11 +304,30 @@ export default function Signin_signup_form({ showRole = false }) {
   const switchTab = (t) => { if (t === tab) return; setTab(t); };
 
   // 🔥 HANDLERS
- const handleLogin = async () => {
+//  const handleLogin = async () => {
+//   const res = await dispatch(loginUser({ email, password }));
+
+//   if (loginUser.fulfilled.match(res)) {
+//     showToast("Login successful ✅", "success");
+
+//     const user = res.payload?.user || res.payload;
+
+//     if (user.role === "superadmin") navigate("/super-admin");
+//     else if (user.role === "admin") navigate("/admin");
+//     else navigate("/dashboard");
+//   } else {
+//     showToast(res.payload, "error");
+//   }
+// };
+
+const handleLogin = async () => {
   const res = await dispatch(loginUser({ email, password }));
 
   if (loginUser.fulfilled.match(res)) {
     showToast("Login successful ✅", "success");
+
+    // 🔥 VERY IMPORTANT (this fixes your bug)
+    await dispatch(getMe()).unwrap();
 
     const user = res.payload?.user || res.payload;
 
@@ -319,7 +339,25 @@ export default function Signin_signup_form({ showRole = false }) {
   }
 };
 
- const handleRegister = async () => {
+//  const handleRegister = async () => {
+//   const res = await dispatch(
+//     registerUser({ name, email, password, role })
+//   );
+
+//   if (registerUser.fulfilled.match(res)) {
+//     showToast("Signup successful 🎉", "success");
+
+//     const user = res.payload.user; // 🔥 IMPORTANT
+
+//     if (user.role === "superadmin") navigate("/super-admin");
+//     else if (user.role === "admin") navigate("/admin");
+//     else navigate("/dashboard");
+//   } else {
+//     showToast(res.payload, "error");
+//   }
+// };
+
+const handleRegister = async () => {
   const res = await dispatch(
     registerUser({ name, email, password, role })
   );
@@ -327,7 +365,10 @@ export default function Signin_signup_form({ showRole = false }) {
   if (registerUser.fulfilled.match(res)) {
     showToast("Signup successful 🎉", "success");
 
-    const user = res.payload.user; // 🔥 IMPORTANT
+    // 🔥 IMPORTANT FIX
+    await dispatch(getMe()).unwrap();
+
+    const user = res.payload.user;
 
     if (user.role === "superadmin") navigate("/super-admin");
     else if (user.role === "admin") navigate("/admin");

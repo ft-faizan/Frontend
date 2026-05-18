@@ -8,7 +8,7 @@ function Nav_bar({ toggleSidebar }) {
 
   const getTitle = () => {
     switch (location.pathname) {
-      case "/Dashboard":
+      case "/dashboard":
         return "Dashboard";
       case "/categories":
         return "Categories";
@@ -20,6 +20,8 @@ function Nav_bar({ toggleSidebar }) {
         return "Admin Panel";
       case "/super-admin":
         return "Super Admin Panel";
+        case "/trash":
+        return "Trash";
       default:
         return "ToolsSaver.com";
     }

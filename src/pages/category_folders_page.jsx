@@ -1,154 +1,137 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// // v5
+
+// import { useEffect } from "react";
+// import { useLocation, useParams } from "react-router-dom";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getTools } from "../features/tools/toolSlice";
+// import ToolCardList from "../components/reuseable_compo/ToolCardList";
+
+// function Category_folders_page() {
+//   const location = useLocation();
+//   const { id } = useParams(); // Assuming your route is /category/:id
+//   const dispatch = useDispatch();
+  
+//   const { tools, loading } = useSelector((state) => state.tools);
+//   const name = location.state?.name;
+
+//   useEffect(() => {
+//     // Fetch tools specifically for this category
+//     // Mode is empty/public to get platform-wide tools
+//     dispatch(getTools({ category: id })); 
+//   }, [dispatch, id]);
+
+//   return (
+//     <div className="py-5">
+//       {/* Header */}
+//       <div className="mb-10">
+//         <h1 className="text-3xl font-bold capitalize text-white">
+//           {name || "Explore Tools"}
+//         </h1>
+//         <p className="text-gray-500 mt-2">
+//           Discover the best {name} tools curated for your workflow.
+//         </p>
+//       </div>
+
+//       {/* Tool List in Public Mode */}
+//       <ToolCardList 
+//         tools={tools} 
+//         mode="public" 
+//         loading={loading}
+//       />
+//     </div>
+//   );
+// }
+
+// export default Category_folders_page;
+
+
+
+
+import { useEffect, useState, useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-  getTools,
-  deleteTool,
-  updateTool,
-} from "../features/tools/toolSlice.js";
-
-import ToolModal from "../components/tools_compo/ToolModal.jsx";
+import { getTools } from "../features/tools/toolSlice";
+import ToolCardList from "../components/reuseable_compo/ToolCardList";
+import ToolFilters from "../components/reuseable_compo/ToolFilters";
 
 function Category_folders_page() {
-  const { id } = useParams();
+  const location = useLocation();
+  const { id } = useParams(); 
   const dispatch = useDispatch();
+  
+  // 1. Local States for Search and Pagination
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({ search: "" });
 
-  const { tools, loading } = useSelector((state) => state.tools);
+  // 2. Redux State
+  const { tools, loading, totalPages } = useSelector((state) => state.tools);
+  const name = location.state?.name;
 
-  const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState(1);
-
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedTool, setSelectedTool] = useState(null);
-
-  const { categories } = useSelector((state) => state.categories);
-  const { user } = useSelector((state) => state.auth);
-
-  // const role = user.role;
-
-  // 🔥 FETCH TOOLS BY CATEGORY
+  // 3. Fetch tools based on Category ID, Search, and Page
   useEffect(() => {
-    const fetch = async () => {
-      const res = await dispatch(
-        // getTools({
-        //   category: id,
-        //   search,
-        //   page: currentPage,
-        //   limit: 10,
-        //   // mode: "admin", // 🔥 important for edit/delete
-        // }),
-        getTools({
-          category: id,
-          search,
-          page: currentPage,
-          limit: 10,
-        mode: window.location.pathname.includes("admin") ? "admin" : undefined // 🔥 KEY FIX
-        }),
-      );
+    dispatch(getTools({ 
+      category: id, 
+      search: filters.search, 
+      page: page 
+    })); 
+  }, [dispatch, id, filters.search, page]);
 
-      setPages(res.payload?.pages || 1);
-    };
+  // 4. Handlers
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1); // Reset to page 1 when searching
+  };
 
-    fetch();
-  }, [dispatch, id, search, currentPage, user]);
+  const handleClearFilters = () => {
+    setFilters({ search: "" });
+    setPage(1);
+  };
 
   return (
-    <div className="p-6">
-      {/* HEADER */}
-      <h1 className="text-2xl font-bold mb-4">Category Tools</h1>
-
-      {/* SEARCH */}
-      <input
-        placeholder="Search tools..."
-        value={search}
-        onChange={(e) => {
-          setSearch(e.target.value);
-          setCurrentPage(1);
-        }}
-        className="w-full p-2 border mb-4"
-      />
-
-      {/* LIST */}
-      <div className="bg-white shadow rounded">
-        {loading ? (
-          <p className="p-4">Loading...</p>
-        ) : tools.length === 0 ? (
-          <p className="p-4">No tools found</p>
-        ) : (
-          tools.map((tool) => (
-            <div key={tool._id} className="p-4 border-b flex justify-between">
-              <div>
-                <p className="font-bold">{tool.name}</p>
-                <p className="text-sm text-gray-500">{tool.category?.name}</p>
-              </div>
-
-              <div>
-                <button
-                  onClick={() => {
-                    setSelectedTool(tool);
-                    setOpenModal(true);
-                  }}
-                  className="text-blue-600"
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={() => dispatch(deleteTool(tool._id))}
-                  className="text-red-500 ml-3"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+    <div className="py-5">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold capitalize text-white">
+          {name || "Explore Tools"}
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Discover the best {name} tools curated for your workflow.
+        </p>
       </div>
 
-      {/* PAGINATION */}
-      <div className="flex gap-2 mt-4">
-        {Array.from({ length: pages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className="px-3 py-1 bg-gray-200"
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
-
-      {/* MODAL */}
-      <ToolModal
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-        initialData={selectedTool}
-        categories={categories}
-        onSubmit={async (formData) => {
-          await dispatch(
-            updateTool({
-              id: selectedTool._id,
-              data: formData,
-            }),
-          );
-
-          const res = await dispatch(
-            getTools({
-              category: id,
-              search,
-              page: currentPage,
-              limit: 10,
-             mode: window.location.pathname.includes("admin") ? "admin" : undefined
-            }),
-          );
-
-          setPages(res.payload?.pages || 1);
-
-          setOpenModal(false);
-        }}
+      {/* 5. Tool Filter (Search Only Mode) */}
+      <ToolFilters
+        type="public" // We can add a "public" case to our ToolFilters for just search
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onClear={handleClearFilters}
       />
+
+      {/* Tool List in Public Mode */}
+      <ToolCardList 
+        tools={tools} 
+        mode="public" 
+        loading={loading}
+      />
+
+      {/* 6. Pagination UI */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-2 mt-10">
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`w-10 h-10 rounded-lg font-bold transition-all ${
+                page === i + 1 
+                  ? "bg-[#286FF0] text-white shadow-lg" 
+                  : "bg-[#1c1f26] text-gray-500 hover:text-gray-300"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

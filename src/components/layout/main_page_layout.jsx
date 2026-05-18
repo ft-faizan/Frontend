@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Nav_bar from "./nav_bar.jsx";
 import Aside_bar from "./aside_bar.jsx";
+import RecentToolsDock from "../reuseable_compo/RecentToolsDock.jsx";
 
 function Main_page_layout() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +49,9 @@ function Main_page_layout() {
         {/* Main content */}
         <div className=" w-full md:w-[85%] h-full p-5">
           <Outlet />
+           <RecentToolsDock />   
         </div>
+         
       </div>
     </div>
   );

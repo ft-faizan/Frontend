@@ -11,6 +11,7 @@ import User_save_page from "../pages/user_save_page.jsx";
 import User_save_folders from "../pages/user_save_folders.jsx";
 import About_page from "../pages/about_page.jsx";
 import Main_page_layout from "../components/layout/main_page_layout.jsx";
+import Trash_page from "../pages/trash_page.jsx"
 
 function appRoutes() {
   return (
@@ -21,7 +22,6 @@ function appRoutes() {
 
       <Route element={<Main_page_layout />}>
         {/* This is the main page layout route. It will be used to wrap all the routes that are accessible to all users. */}
-
         {/* USER (user + admin + superadmin) */}
         <Route
           path="/dashboard"
@@ -31,7 +31,6 @@ function appRoutes() {
             </Protected_route>
           }
         />
-
         <Route
           path="/categories"
           element={
@@ -40,7 +39,6 @@ function appRoutes() {
             </Protected_route>
           }
         />
-
         <Route
           path="/categories/:id/folders"
           element={
@@ -49,7 +47,6 @@ function appRoutes() {
             </Protected_route>
           }
         />
-
         <Route
           path="/users_save"
           element={
@@ -58,16 +55,31 @@ function appRoutes() {
             </Protected_route>
           }
         />
-
-        <Route
+        {/* <Route
           path="/users_save/:id/folders"
           element={
             <Protected_route allowedRoles={["user", "admin", "superadmin"]}>
               <User_save_folders />
             </Protected_route>
           }
+        /> */}
+        // Change this line in your appRoutes.js
+        <Route
+          path="/saved/folder/:id" // 🔥 Match what you use in navigate()
+          element={
+            <Protected_route allowedRoles={["user", "admin", "superadmin"]}>
+              <User_save_folders />
+            </Protected_route>
+          }
         />
-
+           <Route
+          path="/trash"
+          element={
+            <Protected_route allowedRoles={["user","admin", "superadmin"]}>
+              <Trash_page/>
+            </Protected_route>
+          }
+        />
         {/* ADMIN (admin + superadmin) */}
         <Route
           path="/admin"
@@ -77,7 +89,6 @@ function appRoutes() {
             </Protected_route>
           }
         />
-
         {/* SUPER ADMIN ONLY */}
         <Route
           path="/super-admin"

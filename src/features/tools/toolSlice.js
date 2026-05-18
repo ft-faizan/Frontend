@@ -5,38 +5,35 @@ import {
   updateToolAPI,
   deleteToolAPI,
   createToolAPI,
+  getAdminStatsAPI
 } from "./toolAPI.js";
 
-// ===============================
-// 🔥 GET TOOLS
-// ===============================
-// export const getTools = createAsyncThunk(
-//     "tools/getTools",
-//     async ({ mode, search, category }, thunkAPI) => {
-//         try {
-//             let res;
-
-//             const params = {};
-
-//             if (search) params.search = search;
-//             if (category) params.category = category;
-//             if (mode) params.mode = mode;
-//             if (email) params.email = email;
-
-//             // 🔴 admin route
-//             if (mode) {
-//                 res = await getAdminToolsAPI(params);
-//             } else {
-//                 // 🟢 user route
-//                 res = await getAllToolsAPI(params);
-//             }
-
-//             return res.data;
-//         } catch (err) {
-//             return thunkAPI.rejectWithValue(err.response?.data?.message);
-//         }
+// export const getAdminStats = createAsyncThunk(
+//   "tools/getAdminStats",
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const response = await getAdminStatsAPI();
+//       return response.data; // This returns { success: true, toolStats, categoryStats }
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data?.message || "Failed to fetch stats");
 //     }
+//   }
 // );
+
+// Create the Thunk for fetching user-specific card stats
+
+
+export const getAdminStats = createAsyncThunk(
+  "tools/getAdminStats",
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await getAdminStatsAPI(email);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  },
+);
 
 export const getTools = createAsyncThunk(
   "tools/getTools",
@@ -115,6 +112,7 @@ const toolSlice = createSlice({
   name: "tools",
   initialState: {
     tools: [],
+    stats: null,
     loading: false,
     error: null,
   },
@@ -148,7 +146,20 @@ const toolSlice = createSlice({
       //  DELETE TOOLS
       .addCase(deleteTool.fulfilled, (state, action) => {
         state.tools = state.tools.filter((tool) => tool._id !== action.payload);
-      });
+      })
+
+      .addCase(getAdminStats.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAdminStats.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stats = action.payload;
+      })
+      .addCase(getAdminStats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
   },
 });
 
