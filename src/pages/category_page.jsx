@@ -1,18 +1,12 @@
-
-
 import CategoryList from "../components/reuseable_compo/CategoryList.jsx";
 
-
 function Category_page() {
- 
-
   return (
-      <>
-      <h1>Category Tools</h1>
-           <CategoryList mode="user" showCreator={false} />
-      </>
-      
-
+    <>
+      <div className=" h-[90vh] overflow-y-scroll p-5">
+        <CategoryList mode="user" showCreator={false} />
+      </div>
+    </>
   );
 }
 

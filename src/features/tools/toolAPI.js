@@ -35,3 +35,6 @@ export const getAdminStatsAPI = (email) =>
   API.get(`/tools/admin-stats${email ? `?email=${email}` : ""}`);
 
 
+// 🖼 CATEGORY PREVIEW TOOLS
+export const getCategoryPreviewToolsAPI = (id) =>
+  API.get(`/tools/category/${id}/preview`);

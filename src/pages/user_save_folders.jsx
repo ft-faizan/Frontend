@@ -133,6 +133,8 @@ import { fetchSavedTools, deleteSavedTool } from "../features/savedTools/savedTo
 import ToolCardList from "../components/reuseable_compo/ToolCardList";
 import AddCustomToolModal from "../components/user_save_compo/AddCustomToolModal";
 import ToolFilters from "../components/reuseable_compo/ToolFilters";
+import SlidingButton from "../components/reuseable_compo/SlidingButton";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
 
 function User_save_folders() {
   const { id } = useParams(); // Current Folder ID
@@ -146,7 +148,7 @@ function User_save_folders() {
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [selectedCustomTool, setSelectedCustomTool] = useState(null);
   const [toolPage, setToolPage] = useState(1);
-  const toolsPerPage = 12;
+  const toolsPerPage = 25;
 
   // 3. Filter State
   const [filters, setFilters] = useState({
@@ -232,26 +234,117 @@ function User_save_folders() {
   };
 
   return (
-    <div className="py-5">
+    <div className="h-[90vh] overflow-y-scroll p-5">
       {/* Header Section */}
-      <div className="mb-10 flex flex-wrap justify-between items-center gap-4">
-        <div className="flex items-center gap-4">
-          <div className="text-4xl">📁</div>
-          <div>
-            <h1 className="text-3xl font-bold capitalize text-white">{folderName}</h1>
-            <p className="text-gray-500">Items saved in this collection</p>
-          </div>
-        </div>
-        <button
-          onClick={() => {
-            setSelectedCustomTool(null);
-            setIsCustomModalOpen(true);
-          }}
-          className="bg-[#286FF0] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-600 transition-all"
-        >
-          + Add Tool to Folder
-        </button>
-      </div>
+      {/* <div className="mb-5 flex flex-wrap justify-end items-center gap-4">
+        
+         <SlidingButton
+              icon={<FaPlus className="text-white text-base" />}
+              text="Add Custom Tools"
+              onClick={() => {
+                setSelectedCustomTool(null);
+                setIsCustomModalOpen(true);
+              }}
+              width="w-[220px]"
+            />
+      </div> */}
+      <div className="flex items-center justify-between gap-3 mb-5">
+
+  {/* BACK BUTTON */}
+  <button
+    type="button"
+    onClick={() => window.history.back()}
+    className="
+      relative
+      group
+
+      w-[200px]
+      h-[44px]
+
+      cursor-pointer
+
+      flex
+      items-center
+
+      rounded-xl
+
+      border
+      border-[#3380FF]/50
+
+      bg-[#3380FF]
+
+      overflow-hidden
+
+      shadow-lg
+      shadow-[#3380FF]/10
+
+      active:scale-[0.98]
+
+      transition-all
+      duration-300
+    "
+  >
+    {/* ICON */}
+    <span
+      className="
+        absolute
+        left-0
+        top-0
+        bottom-0
+
+        w-[42px]
+
+        bg-[#226ce6]
+
+        flex
+        items-center
+        justify-center
+
+        transition-all
+        duration-300
+
+        group-hover:w-full
+      "
+    >
+      <FaArrowLeft className="text-white" />
+    </span>
+
+    {/* TEXT */}
+    <span
+      className="
+        absolute
+        right-0
+
+        text-white
+        font-semibold
+        text-sm
+        tracking-wide
+
+        transition-all
+        duration-300
+
+        group-hover:text-transparent
+
+        relative
+        left-[68px]
+      "
+    >
+      Back to Saved
+    </span>
+  </button>
+
+  {/* RIGHT BUTTON */}
+  <SlidingButton
+    icon={<FaPlus className="text-white text-base" />}
+    text="Add Custom Tools"
+    onClick={() => {
+      setSelectedCustomTool(null);
+      setIsCustomModalOpen(true);
+    }}
+    width="w-[220px]"
+  />
+
+</div>
 
       {/* Filter Component */}
       <ToolFilters
@@ -263,7 +356,8 @@ function User_save_folders() {
       />
 
       {/* Tool List */}
-      <ToolCardList
+      <div className="mt-[30px]">
+        <ToolCardList
         tools={paginatedTools}
         mode="saved"
         loading={loading}
@@ -271,23 +365,68 @@ function User_save_folders() {
         onDelete={handleRemoveSaved}
       />
 
+      </div>
+      
       {/* Pagination UI */}
       {totalToolPages > 1 && (
-        <div className="flex justify-center gap-2 mt-10">
-          {[...Array(totalToolPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setToolPage(i + 1)}
-              className={`w-10 h-10 rounded-lg font-bold transition-all ${
-                toolPage === i + 1 
-                  ? "bg-[#286FF0] text-white shadow-lg" 
-                  : "bg-[#1c1f26] text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        // <div className="flex justify-center gap-2 mt-10">
+        //   {[...Array(totalToolPages)].map((_, i) => (
+        //     <button
+        //       key={i}
+        //       onClick={() => setToolPage(i + 1)}
+        //       className={`w-10 h-10 rounded-lg font-bold transition-all ${
+        //         toolPage === i + 1 
+        //           ? "bg-[#286FF0] text-white shadow-lg" 
+        //           : "bg-[#1c1f26] text-gray-500 hover:text-gray-300"
+        //       }`}
+        //     >
+        //       {i + 1}
+        //     </button>
+        //   ))}
+        // </div>
+        <div className="flex justify-center items-center gap-4 mt-10 pb-10">
+  
+  {/* PREV BUTTON */}
+  <button
+    type="button"
+    onClick={() => setToolPage((p) => Math.max(p - 1, 1))}
+    disabled={toolPage === 1}
+    className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+  >
+    Prev
+  </button>
+
+  {/* PAGE BUTTONS */}
+  <div className="flex gap-1.5">
+    {Array.from({ length: totalToolPages }, (_, i) => i + 1).map((p) => (
+      <button
+        key={p}
+        type="button"
+        onClick={() => setToolPage(p)}
+        className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
+          toolPage === p
+            ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
+            : "text-slate-400 hover:bg-white hover:text-blue-600"
+        }`}
+      >
+        {p}
+      </button>
+    ))}
+  </div>
+
+  {/* NEXT BUTTON */}
+  <button
+    type="button"
+    onClick={() =>
+      setToolPage((p) => Math.min(p + 1, totalToolPages))
+    }
+    disabled={toolPage === totalToolPages}
+    className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+  >
+    Next
+  </button>
+
+</div>
       )}
 
       {/* Modal */}

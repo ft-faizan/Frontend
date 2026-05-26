@@ -24,7 +24,7 @@ function appRoutes() {
         {/* This is the main page layout route. It will be used to wrap all the routes that are accessible to all users. */}
         {/* USER (user + admin + superadmin) */}
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <Protected_route allowedRoles={["user", "admin", "superadmin"]}>
               <Dashboard_page />

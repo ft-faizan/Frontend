@@ -1,82 +1,167 @@
-import styled from 'styled-components';
+// import React, { useState } from 'react';
 
-const Button = () => {
+// const MenuButton = ({ isOpen, onClick }) => {
+//   // If you aren't managing the open/close state from a parent sidebar,
+//   // you can uncomment these two lines to make it work completely standalone:
+//   // const [localOpen, setLocalOpen] = useState(false);
+//   // const isButtonOpen = isOpen ?? localOpen;
+
+//   return (
+//     <div className="relative flex items-center justify-center select-none">
+      
+//       {/* 
+//         The Next-Gen Glassmorphism Background Container
+//         Matches your bento cards with seamless border rings and blur mechanics
+//       */}
+//       <div className="w-[60px] h-[60px] sm:w-[65px] sm:h-[65px] rounded-2xl flex items-center justify-center border border-gray-200/80 dark:border-white/[0.08] bg-white/40 dark:bg-white/[0.04] shadow-sm shadow-black/[0.03] backdrop-blur-xl transition-all duration-300 hover:shadow-md hover:border-[#3981FA]/30 dark:hover:border-[#3981FA]/40 group">
+        
+//         {/* Toggle Button wrapper trigger */}
+//         <button
+//           type="button"
+//           onClick={onClick ?? (() => {})}
+//           className="w-8 h-8 p-1 flex flex-col justify-between items-center focus:outline-none cursor-pointer relative"
+//           aria-label="Toggle Menu"
+//         >
+//           {/* Top Bar Line */}
+//           <span 
+//             className={`
+//               w-full h-[2.5px] rounded-full transition-all duration-400 ease-out shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+//               ${isOpen 
+//                 ? 'bg-red-500 dark:bg-red-400 translate-y-[9px] -rotate-45' 
+//                 : 'bg-[#3981FA] group-hover:bg-[#226ce6]'
+//               }
+//             `} 
+//           />
+
+//           {/* Middle Bar Line */}
+//           <span 
+//             className={`
+//               h-[2.5px] rounded-full transition-all duration-300 ease-out shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+//               ${isOpen 
+//                 ? 'w-0 opacity-0' 
+//                 : 'w-[70%] bg-[#3981FA] group-hover:w-full group-hover:bg-[#226ce6]'
+//               }
+//             `} 
+//           />
+
+//           {/* Bottom Bar Line */}
+//           <span 
+//             className={`
+//               w-full h-[2.5px] rounded-full transition-all duration-400 ease-out shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+//               ${isOpen 
+//                 ? 'bg-red-500 dark:bg-red-400 -translate-y-[9.5px] rotate-45' 
+//                 : 'bg-[#3981FA] group-hover:bg-[#226ce6]'
+//               }
+//             `} 
+//           />
+//         </button>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MenuButton;
+
+
+
+
+
+import React from 'react';
+
+const MenuButton = ({ isOpen, onClick, className = '' }) => {
   return (
-    <StyledWrapper>
-      <div className="background">
-        <button className="menu__icon">
-          <span />
-          <span />
-          <span />
+    <div className={`relative flex items-center justify-center select-none ${className}`}>
+      {/* Animated gradient border container */}
+      <div className={`
+        relative w-[60px] h-[60px] sm:w-[65px] sm:h-[65px] rounded-2xl 
+        flex items-center justify-center 
+        bg-white/40 dark:bg-white/[0.04] 
+        backdrop-blur-xl 
+        transition-all duration-500 ease-out
+        hover:scale-105 active:scale-95
+        group
+        before:absolute before:inset-0 before:rounded-2xl before:p-[1px] before:bg-gradient-to-r before:from-transparent before:via-[#3981FA]/30 before:to-transparent
+        before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500
+        ${isOpen ? 'shadow-lg shadow-red-500/20' : 'shadow-sm shadow-black/[0.03]'}
+      `}>
+        
+        {/* Inner border ring */}
+        <div className={`
+          absolute inset-[1px] rounded-2xl
+          transition-all duration-500
+          ${isOpen 
+            ? 'bg-gradient-to-br from-red-50/50 to-red-100/30 dark:from-red-950/30 dark:to-red-900/20' 
+            : 'bg-transparent group-hover:bg-gradient-to-br group-hover:from-[#3981FA]/10 group-hover:to-transparent'
+          }
+        `} />
+
+        {/* Toggle Button */}
+        <button
+          type="button"
+          onClick={onClick}
+          className="relative z-10 w-8 h-8 p-1 flex flex-col justify-between items-center focus:outline-none cursor-pointer"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+        >
+          {/* Top Bar - rotating with bounce */}
+          <span 
+            className={`
+              w-full h-[2.5px] rounded-full 
+              transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+              shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+              origin-center
+              ${isOpen 
+                ? 'bg-red-500 dark:bg-red-400 translate-y-[9px] -rotate-45 scale-110' 
+                : 'bg-[#3981FA] group-hover:bg-[#226ce6] group-hover:scale-110'
+              }
+            `} 
+            aria-hidden="true"
+          />
+
+          {/* Middle Bar - collapsing with scale */}
+          <span 
+            className={`
+              h-[2.5px] rounded-full 
+              transition-all duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]
+              shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+              origin-center
+              ${isOpen 
+                ? 'w-0 opacity-0 scale-x-0' 
+                : 'w-[70%] bg-[#3981FA] group-hover:w-full group-hover:bg-[#226ce6] group-hover:scale-x-110'
+              }
+            `} 
+            aria-hidden="true"
+          />
+
+          {/* Bottom Bar - rotating with bounce */}
+          <span 
+            className={`
+              w-full h-[2.5px] rounded-full 
+              transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+              shadow-[0_0.5px_2px_rgba(0,0,0,0.1)]
+              origin-center
+              ${isOpen 
+                ? 'bg-red-500 dark:bg-red-400 -translate-y-[9.5px] rotate-45 scale-110' 
+                : 'bg-[#3981FA] group-hover:bg-[#226ce6] group-hover:scale-110'
+              }
+            `} 
+            aria-hidden="true"
+          />
         </button>
+
+        {/* Animated pulse ring on hover */}
+        <div className="absolute inset-0 rounded-2xl pointer-events-none">
+          <div className={`
+            absolute inset-0 rounded-2xl
+            transition-all duration-700
+            group-hover:animate-pulse group-hover:ring-2 group-hover:ring-[#3981FA]/40
+            ${isOpen && 'ring-2 ring-red-500/50'}
+          `} />
+        </div>
       </div>
-    </StyledWrapper>
+    </div>
   );
-}
+};
 
-const StyledWrapper = styled.div`
-  /* <reset-style> ============================ */
-  button {
-    border: none;
-    background: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  /* ============================ */
-  /* <style for bg> ======== */
-  .background {
-    border-radius: 16px;
-    border: 1px solid #1a1a1a;
-    background: rgba(74, 74, 74, 0.39);
-    mix-blend-mode: luminosity;
-    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.20);
-    backdrop-filter: blur(15px);
-    width: 65px;
-    height: 65px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* <style for menu__icon> ======== */
-  .menu__icon {
-    width: 28px;
-    height: 28px;
-    padding: 3px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  .menu__icon span {
-    width: 100%;
-    height: 0.125rem;
-    border-radius: 0.125rem;
-    background-color: rgb(0, 122, 255);
-    box-shadow: 0 .5px 2px 0 hsla(0, 0%, 0%, .2);
-    transition: transform .4s, background-color .4s, width .4s, opacity .4s;
-  }
-
-  .menu__icon span:nth-child(2) {
-    width: 60%;
-  }
-
-  .menu__icon:hover span:nth-child(1) {
-    background-color: rgb(255, 59, 48);
-    transform: translateY(7.5px) rotate(-45deg);
-  }
-
-  .menu__icon:hover span:nth-child(2) {
-    width: 0;
-    opacity: 0;
-  }
-
-  .menu__icon:hover span:nth-child(3) {
-    background-color: rgb(255, 59, 48);
-    transform: translateY(-7.5px) rotate(45deg);
-  }`;
-
-export default Button;
+export default MenuButton;

@@ -240,7 +240,7 @@ export default function Dock({
       <motion.div
         onMouseMove={({ pageX }) => { isHovered.set(1); mouseX.set(pageX); }}
         onMouseLeave={() => { isHovered.set(0); mouseX.set(Infinity); }}
-        className={`${className} flex items-end gap-3 rounded-2xl border border-[#2a2d3a] bg-[#0a0c12]/80 backdrop-blur-xl px-4 pb-2 shadow-2xl`}
+        className={`${className} flex items-end gap-3 rounded-2xl border border-[#D6E1FD] bg-[#FFFFFF]/80 backdrop-blur-xl px-4 pb-2 shadow-2xl`}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Recent tools dock"

@@ -147,7 +147,26 @@ export default function RecentToolsDock() {
   }));
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-2 px-4 pointer-events-none">
+    <div
+  className="
+    fixed
+    bottom-0
+
+    left-0
+    min-[1330px]:left-[15%]
+
+    right-0
+
+    z-40
+    flex
+    justify-center
+
+    pb-2
+    px-4
+
+    pointer-events-none
+  "
+>
       <div className="flex flex-col items-center pointer-events-auto w-full max-w-lg">
         {/* label above dock */}
         {/* <div className="flex items-center gap-1.5 mb-1">
@@ -161,7 +180,7 @@ export default function RecentToolsDock() {
         <Dock
           items={items}
           panelHeight={68}
-          baseItemSize={52}
+          baseItemSize={50}
           magnification={72}
           distance={150}
         />

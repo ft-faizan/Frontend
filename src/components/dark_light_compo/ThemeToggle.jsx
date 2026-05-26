@@ -25,7 +25,7 @@ export default function ThemeToggle() {
       <div className="w-12 h-5 bg-zinc-300 dark:bg-zinc-600 rounded-full transition-colors duration-300" />
 
       {/* Thumb */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#283FE1] dark:bg-zinc-800 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ease-in-out peer-checked:left-[calc(100%-2rem)] peer-active:scale-95">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#3380FF] dark:bg-zinc-800 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ease-in-out peer-checked:left-[calc(100%-2rem)] peer-active:scale-95">
         {/* Sun Icon */}
         <svg
           className={`w-4 h-4 text-white transition-opacity duration-300 ${

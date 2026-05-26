@@ -5,7 +5,8 @@ import {
   updateToolAPI,
   deleteToolAPI,
   createToolAPI,
-  getAdminStatsAPI
+  getAdminStatsAPI,
+  getCategoryPreviewToolsAPI,
 } from "./toolAPI.js";
 
 // export const getAdminStats = createAsyncThunk(
@@ -22,6 +23,28 @@ import {
 
 // Create the Thunk for fetching user-specific card stats
 
+export const getCategoryPreviewTools = createAsyncThunk(
+  "tools/getCategoryPreviewTools",
+  async (categoryId, thunkAPI) => {
+    try {
+      const res = await getCategoryPreviewToolsAPI(categoryId);
+
+      // return {
+      //   categoryId,
+      //   tools: res.data.tools,
+      // };
+      return {
+        categoryId,
+
+        tools: res.data.tools,
+
+        total: res.data.total,
+      };
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message);
+    }
+  },
+);
 
 export const getAdminStats = createAsyncThunk(
   "tools/getAdminStats",
@@ -112,7 +135,10 @@ const toolSlice = createSlice({
   name: "tools",
   initialState: {
     tools: [],
+    pages: 1,
+    total: 0,
     stats: null,
+    categoryPreview: {},
     loading: false,
     error: null,
   },
@@ -128,9 +154,27 @@ const toolSlice = createSlice({
       .addCase(getTools.pending, (state) => {
         state.loading = true;
       })
+      // .addCase(getTools.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.tools = action.payload.tools;
+      // })
+      // .addCase(getTools.fulfilled, (state, action) => {
+      //   state.loading = false;
+
+      //   state.tools = action.payload.tools;
+
+      //   // ✅ ADD THIS
+      //   state.pages = action.payload.pages || 1;
+      // })
       .addCase(getTools.fulfilled, (state, action) => {
         state.loading = false;
+
         state.tools = action.payload.tools;
+
+        state.pages = action.payload.pages || 1;
+
+        // 🔥 ADD THIS
+        state.total = action.payload.total || 0;
       })
       .addCase(getTools.rejected, (state, action) => {
         state.loading = false;
@@ -159,7 +203,19 @@ const toolSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getCategoryPreviewTools.fulfilled, (state, action) => {
+        // state.categoryPreview[action.payload.categoryId] = {
+        //   tools: action.payload.tools,
+        //   image: action.payload.tools?.[0]?.image?.url || null,
+        // };
+        state.categoryPreview[action.payload.categoryId] = {
+          tools: action.payload.tools,
 
+          total: action.payload.total,
+
+          image: action.payload.tools?.[0]?.image?.url || null,
+        };
+      });
   },
 });
 
