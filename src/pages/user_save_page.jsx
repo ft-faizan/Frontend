@@ -931,6 +931,7 @@ import SlidingButton from "../components/reuseable_compo/SlidingButton";
 import { FaPlus } from "react-icons/fa";
 import { ChevronDown, X, Search, Filter, Layers, Mail } from "lucide-react";
 import { useToast } from "../context/ToastContext";
+import ConfirmModal from "../components/reuseable_compo/ConfirmModal";
 
 function User_save_page() {
   const { showToast } = useToast();
@@ -951,6 +952,12 @@ function User_save_page() {
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [selectedCustomTool, setSelectedCustomTool] = useState(null);
+
+  const [deleteFolderModal, setDeleteFolderModal] = useState(false);
+
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
+
+  const [selectedFolderName, setSelectedFolderName] = useState("");
 
   // 2. Constants
   const itemsPerPage = 16; // Folders per page
@@ -1060,24 +1067,34 @@ function User_save_page() {
   //   }
   // };
 
+  //   const handleDeleteFolder = async (id) => {
+  //   if (
+  //     window.confirm(
+  //       "Delete folder? Tools inside will be moved to default."
+  //     )
+  //   ) {
+  //     try {
+  //       await dispatch(deleteFolder(id)).unwrap();
+
+  //       showToast(
+  //         "Folder deleted successfully",
+  //         "error"
+  //       );
+  //     } catch (err) {
+  //       showToast(err || "Failed to delete folder", "error");
+  //     }
+  //   }
+  // };
+
   const handleDeleteFolder = async (id) => {
-  if (
-    window.confirm(
-      "Delete folder? Tools inside will be moved to default."
-    )
-  ) {
     try {
       await dispatch(deleteFolder(id)).unwrap();
 
-      showToast(
-        "Folder deleted successfully",
-        "error"
-      );
+      showToast("Folder deleted successfully");
     } catch (err) {
       showToast(err || "Failed to delete folder", "error");
     }
-  }
-};
+  };
 
   // const handleFolderConfirm = (name) => {
   //   if (selectedFolder) {
@@ -1088,44 +1105,29 @@ function User_save_page() {
   // };
 
   const handleFolderConfirm = async (name) => {
-  try {
+    try {
+      if (selectedFolder) {
+        // UPDATE
+        await dispatch(
+          updateFolder({
+            id: selectedFolder._id,
+            name,
+          }),
+        ).unwrap();
 
-    if (selectedFolder) {
+        showToast("Folder renamed successfully");
+      } else {
+        // CREATE
+        await dispatch(createFolder(name)).unwrap();
 
-      // UPDATE
-      await dispatch(
-        updateFolder({
-          id: selectedFolder._id,
-          name,
-        })
-      ).unwrap();
+        showToast("Folder created successfully");
+      }
 
-      showToast(
-        "Folder renamed successfully"
-      );
-
-    } else {
-
-      // CREATE
-      await dispatch(
-        createFolder(name)
-      ).unwrap();
-
-      showToast(
-        "Folder created successfully"
-      );
+      setIsFolderModalOpen(false);
+    } catch (err) {
+      showToast(err || "Something went wrong", "error");
     }
-
-    setIsFolderModalOpen(false);
-
-  } catch (err) {
-
-    showToast(
-      err || "Something went wrong",
-      "error"
-    );
-  }
-};
+  };
 
   const handleEditClick = (tool) => {
     setSelectedCustomTool(tool);
@@ -1186,57 +1188,50 @@ function User_save_page() {
           </div>
         )} */}
         {totalToolPages > 1 && (
-  <div className="flex justify-center items-center gap-4 mt-10 pb-10">
+          <div className="flex justify-center items-center gap-4 mt-10 pb-10">
+            {/* PREV */}
+            <button
+              type="button"
+              onClick={() => setToolPage((p) => Math.max(p - 1, 1))}
+              disabled={toolPage === 1}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              Prev
+            </button>
 
-    {/* PREV */}
-    <button
-      type="button"
-      onClick={() =>
-        setToolPage((p) => Math.max(p - 1, 1))
-      }
-      disabled={toolPage === 1}
-      className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-    >
-      Prev
-    </button>
+            {/* PAGE NUMBERS */}
+            <div className="flex gap-1.5">
+              {Array.from({ length: totalToolPages }, (_, i) => i + 1).map(
+                (p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setToolPage(p)}
+                    className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
+                      toolPage === p
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
+                        : "text-slate-400 hover:bg-white hover:text-blue-600"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ),
+              )}
+            </div>
 
-    {/* PAGE NUMBERS */}
-    <div className="flex gap-1.5">
-      {Array.from(
-        { length: totalToolPages },
-        (_, i) => i + 1
-      ).map((p) => (
-        <button
-          key={p}
-          type="button"
-          onClick={() => setToolPage(p)}
-          className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
-            toolPage === p
-              ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
-              : "text-slate-400 hover:bg-white hover:text-blue-600"
-          }`}
-        >
-          {p}
-        </button>
-      ))}
-    </div>
-
-    {/* NEXT */}
-    <button
-      type="button"
-      onClick={() =>
-        setToolPage((p) =>
-          Math.min(p + 1, totalToolPages)
-        )
-      }
-      disabled={toolPage === totalToolPages}
-      className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-    >
-      Next
-    </button>
-
-  </div>
-)}
+            {/* NEXT */}
+            <button
+              type="button"
+              onClick={() =>
+                setToolPage((p) => Math.min(p + 1, totalToolPages))
+              }
+              disabled={toolPage === totalToolPages}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </>
     ),
     saved_tools_folders: (
@@ -1255,7 +1250,8 @@ function User_save_page() {
             />
           </div>
         </div> */}
-        <div className="        relative
+        <div
+          className="        relative
         before:absolute before:inset-0
         before:rounded-2xl
         before:bg-white/[0.02]
@@ -1274,7 +1270,8 @@ function User_save_page() {
         shadow-[0_8px_32px_rgba(0,0,0,0.35)]
         backdrop-blur-2xl
         sticky top-2
-        z-[30]">
+        z-[30]"
+        >
           <Search className="absolute left-8 z-[10] top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
           <div class="relative flex-grow flex items-center group min-w-[200px]">
             <input
@@ -1302,7 +1299,16 @@ function User_save_page() {
                 setSelectedFolder(f);
                 setIsFolderModalOpen(true);
               }}
-              onDelete={handleDeleteFolder}
+              // onDelete={handleDeleteFolder}
+              onDelete={(id) => {
+                const folder = folders.find((f) => f._id === id);
+
+                setSelectedFolderId(id);
+
+                setSelectedFolderName(folder?.name || "folder");
+
+                setDeleteFolderModal(true);
+              }}
             />
           ))}
         </div>
@@ -1321,57 +1327,50 @@ function User_save_page() {
           </div>
         )} */}
         {totalFolderPages > 1 && (
-  <div className="flex justify-center items-center gap-4 mt-8 pb-10">
+          <div className="flex justify-center items-center gap-4 mt-8 pb-10">
+            {/* PREV */}
+            <button
+              type="button"
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              Prev
+            </button>
 
-    {/* PREV */}
-    <button
-      type="button"
-      onClick={() =>
-        setCurrentPage((p) => Math.max(p - 1, 1))
-      }
-      disabled={currentPage === 1}
-      className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-    >
-      Prev
-    </button>
+            {/* PAGE NUMBERS */}
+            <div className="flex gap-1.5">
+              {Array.from({ length: totalFolderPages }, (_, i) => i + 1).map(
+                (p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setCurrentPage(p)}
+                    className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
+                      currentPage === p
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
+                        : "text-slate-400 hover:bg-white hover:text-blue-600"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ),
+              )}
+            </div>
 
-    {/* PAGE NUMBERS */}
-    <div className="flex gap-1.5">
-      {Array.from(
-        { length: totalFolderPages },
-        (_, i) => i + 1
-      ).map((p) => (
-        <button
-          key={p}
-          type="button"
-          onClick={() => setCurrentPage(p)}
-          className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
-            currentPage === p
-              ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
-              : "text-slate-400 hover:bg-white hover:text-blue-600"
-          }`}
-        >
-          {p}
-        </button>
-      ))}
-    </div>
-
-    {/* NEXT */}
-    <button
-      type="button"
-      onClick={() =>
-        setCurrentPage((p) =>
-          Math.min(p + 1, totalFolderPages)
-        )
-      }
-      disabled={currentPage === totalFolderPages}
-      className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-    >
-      Next
-    </button>
-
-  </div>
-)}
+            {/* NEXT */}
+            <button
+              type="button"
+              onClick={() =>
+                setCurrentPage((p) => Math.min(p + 1, totalFolderPages))
+              }
+              disabled={currentPage === totalFolderPages}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     ),
   };
@@ -1443,6 +1442,16 @@ function User_save_page() {
           setSelectedCustomTool(null);
         }}
         editData={selectedCustomTool}
+      />
+      <ConfirmModal
+        open={deleteFolderModal}
+        onClose={() => setDeleteFolderModal(false)}
+        onConfirm={() => handleDeleteFolder(selectedFolderId)}
+        title="Delete Folder"
+        message={`Are you sure you want to delete "${selectedFolderName}"? Tools inside will be moved to default folder.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
       />
     </div>
   );

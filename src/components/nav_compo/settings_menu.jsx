@@ -237,7 +237,7 @@ export default function Settings_menu() {
 
       {/* ── Centered Full-Screen Modal ── */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-5000 flex items-center justify-center p-4">
           {/* Blurred backdrop — click to close */}
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-md"

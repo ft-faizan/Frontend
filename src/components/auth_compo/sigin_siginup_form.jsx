@@ -333,7 +333,7 @@ const handleLogin = async () => {
 
     if (user.role === "superadmin") navigate("/super-admin");
     else if (user.role === "admin") navigate("/admin");
-    else navigate("/dashboard");
+    else navigate("/");
   } else {
     showToast(res.payload, "error");
   }
@@ -372,7 +372,7 @@ const handleRegister = async () => {
 
     if (user.role === "superadmin") navigate("/super-admin");
     else if (user.role === "admin") navigate("/admin");
-    else navigate("/dashboard");
+    else navigate("/");
   } else {
     showToast(res.payload, "error");
   }
