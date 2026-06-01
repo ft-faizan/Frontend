@@ -677,7 +677,7 @@ function ToolContent() {
   const dispatch = useDispatch();
 
   // 🔥 TOOLS STATE
-  const { tools, loading, totalPages, stats } = useSelector(
+  const { tools, loading, pages, stats } = useSelector(
     (state) => state.tools,
   );
 
@@ -713,7 +713,7 @@ function ToolContent() {
         mode: "superadmin",
 
         page,
-
+        limit: 27,
         search: filters.search,
 
         category: filters.category,
@@ -819,7 +819,7 @@ function ToolContent() {
             ))}
           </div>
         )} */}
-        {totalPages > 1 && (
+        {pages > 1 && (
   <div className="flex justify-center items-center gap-4 mt-10 pb-10">
 
     {/* PREV */}
@@ -837,7 +837,7 @@ function ToolContent() {
     {/* PAGE NUMBERS */}
     <div className="flex gap-1.5">
       {Array.from(
-        { length: totalPages },
+        { length: pages },
         (_, i) => i + 1
       ).map((p) => (
         <button
@@ -860,10 +860,10 @@ function ToolContent() {
       type="button"
       onClick={() =>
         setPage((p) =>
-          Math.min(p + 1, totalPages)
+          Math.min(p + 1, pages)
         )
       }
-      disabled={page === totalPages}
+      disabled={page === pages}
       className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
     >
       Next

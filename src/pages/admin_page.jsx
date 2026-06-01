@@ -263,88 +263,7 @@ z-[30]
         })}
       </div>
 
-      {/* 📊 PLATFORM CONTENT CARDS */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-        
-        <div className="bg-[#1c1f26] border border-[#2a2d3a] p-6 rounded-2xl relative overflow-hidden">
-          <div className="relative z-10">
-            {/* <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
-              Total Platform Tools
-            </p> *
-            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
-              {isMyStats ? "Tools Created by Me" : `Tools by ${searchEmail}`}
-            </p>
-            <div className="flex items-baseline gap-2 mt-2">
-              <h3 className="text-4xl font-bold text-white">
-                {stats?.toolStats?.reduce(
-                  (acc, curr) => acc + (curr.count || 0),
-                  0,
-                ) || 0}
-              </h3>
-              <span className="text-blue-500 text-sm font-medium italic">
-                Active Tools
-              </span>
-            </div>
-          </div>
-         
-          <div className="absolute -right-4 -bottom-4 text-blue-500/10 scale-150">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="100"
-              height="100"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.82 0l.3.3a2 2 0 0 1 0 2.82l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.82 0l.3.3a2 2 0 0 1 0 2.82l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.82 0l.3.3a2 2 0 0 1 0 2.82l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1 2.82 0l.3.3a2 2 0 0 1 0 2.82l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0"></path>
-            </svg>
-          </div>
-        </div>
-
-        <div className="bg-[#1c1f26] border border-[#2a2d3a] p-6 rounded-2xl relative overflow-hidden">
-          <div className="relative z-10">
-            
-            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">
-              {isMyStats
-                ? "Categories Created by Me"
-                : `Categories by ${searchEmail}`}
-            </p>
-            <div className="flex items-baseline gap-2 mt-2">
-              <h3 className="text-4xl font-bold text-[#8b5cf6]">
-                {stats?.categoryStats?.reduce(
-                  (acc, curr) => acc + (curr.count || 0),
-                  0,
-                ) || 0}
-              </h3>
-              <span className="text-purple-500 text-sm font-medium italic">
-                Global Types
-              </span>
-            </div>
-          </div>
-         
-          <div className="absolute -right-4 -bottom-4 text-purple-500/10 scale-150">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="100"
-              height="100"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect width="7" height="7" x="3" y="3" rx="1"></rect>
-              <rect width="7" height="7" x="14" y="3" rx="1"></rect>
-              <rect width="7" height="7" x="14" y="14" rx="1"></rect>
-              <rect width="7" height="7" x="3" y="14" rx="1"></rect>
-            </svg>
-          </div>
-        </div>
-      </div> */}
+      
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5  w-full p-1">
         {/* ─── CARD 1: TOOLS STATS ─── */}
@@ -607,7 +526,7 @@ function ToolContent({ setToolOpen, setToolEditData }) {
       getTools({
         mode: "admin",
         page,
-        limit: 25,
+        limit:27,
         search: filters.search,
         category: filters.category,
       }),
@@ -640,59 +559,7 @@ function ToolContent({ setToolOpen, setToolEditData }) {
     setPage(1);
   };
   return (
-    // <div>
-    //   <h2 className="text-xl font-semibold mb-2">Tool</h2>
-    //   <p className="text-gray-400">Manage your tools here.</p>
-    //   <div>
-    //   <div className="flex justify-between items-center mb-6">
-    //     <h2 className="text-xl font-semibold">Manage Tools</h2>
-    //     <button
-    //       onClick={() => {
-    //         setEditData(null);
-    //         setOpen(true);
-    //       }}
-    //       className="bg-[#3380FF] text-white px-4 py-2 rounded-lg font-medium"
-    //     >
-    //       + Create Tool
-    //     </button>
-    //   </div>
 
-    //   {/* TOOL LIST TABLE */}
-    //   <div className="bg-[#1c1f26] border border-[#2a2d3a] rounded-xl overflow-hidden">
-    //     <table className="w-full text-left">
-    //       <thead className="bg-[#252833] text-gray-400 text-sm">
-    //         <tr>
-    //           <th className="p-4">Tool</th>
-    //           <th className="p-4">Category</th>
-    //           <th className="p-4 text-right">Actions</th>
-    //         </tr>
-    //       </thead>
-    //       <tbody className="divide-y divide-[#2a2d3a]">
-    //         {tools.map((tool) => (
-    //           <tr key={tool._id} className="hover:bg-[#252833]/50 transition-colors">
-    //             <td className="p-4 flex items-center gap-3">
-    //               <img src={tool.image?.url} className="w-10 h-10 rounded-md object-cover" />
-    //               <span className="font-medium text-white">{tool.name}</span>
-    //             </td>
-    //             <td className="p-4 text-gray-400">{tool.category?.name || "N/A"}</td>
-    //             <td className="p-4 text-right space-x-3">
-    //               <button onClick={() => handleEdit(tool)} className="text-blue-400 hover:underline">Edit</button>
-    //               <button onClick={() => handleDelete(tool._id)} className="text-red-400 hover:underline">Delete</button>
-    //             </td>
-    //           </tr>
-    //         ))}
-    //       </tbody>
-    //     </table>
-    //     {tools.length === 0 && !loading && <p className="p-10 text-center text-gray-500">No tools found.</p>}
-    //   </div>
-
-    //   <CreateAndEditToolModal
-    //     open={open}
-    //     onClose={() => setOpen(false)}
-    //     editData={editData}
-    //   />
-    // </div>
-    // </div>
     <div className="mt-0">
       <div className="px-5 sticky top-0 z-[40]">
         <ToolFilters
@@ -714,23 +581,7 @@ function ToolContent({ setToolOpen, setToolEditData }) {
         />
       </div>
 
-      {/* {pages > 1 && (
-        <div className="flex justify-center gap-2 mt-10">
-          {[...Array(pages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`px-3 py-2 rounded ${
-                page === i + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-700 text-gray-300"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      )} */}
+      
       {pages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-10 pb-10">
           {/* PREV */}
