@@ -57,18 +57,7 @@ export const fetchSavedTools = createAsyncThunk(
   },
 );
 
-// ➕ ADDED: Move Saved Tool Thunk (Optional but good to have)
-// export const moveSavedTool = createAsyncThunk(
-//   "savedTools/moveSavedTool",
-//   async ({ id, folderId }, thunkAPI) => {
-//     try {
-//       const res = await moveSavedToolAPI(id, folderId);
-//       return res.data.tool;
-//     } catch (err) {
-//       return thunkAPI.rejectWithValue(err.response?.data?.message);
-//     }
-//   }
-// );
+
 
 // In savedToolSlice.js
 export const moveSavedTool = createAsyncThunk(
@@ -104,11 +93,7 @@ const savedToolSlice = createSlice({
         state.loading = false;
         state.savedItems = action.payload.tools;
       })
-      // SAVE
-      // .addCase(saveTool.fulfilled, (state, action) => {
-      //   state.savedItems.unshift(action.payload);
-      // })
-      // ADD THIS
+      
       .addCase(saveTool.fulfilled, (state, action) => {
         state.savedItems = [action.payload, ...state.savedItems];
         state.loading = false;
@@ -119,12 +104,7 @@ const savedToolSlice = createSlice({
           (item) => item._id !== action.payload,
         );
       })
-      // // MOVE
-      // .addCase(moveSavedTool.fulfilled, (state, action) => {
-      //   state.savedItems = state.savedItems.map((item) =>
-      //     item._id === action.payload._id ? action.payload : item
-      //   );
-      // });
+      
 
       .addCase(moveSavedTool.fulfilled, (state, action) => {
         const updated = action.payload.tool;
@@ -137,56 +117,6 @@ const savedToolSlice = createSlice({
           state.savedItems[index] = updated; // 🔥 update UI
         }
       })
-      // .addCase(updateCustomTool.fulfilled, (state, action) => {
-      //   const updated = action.payload;
-
-      //   const index = state.savedItems.findIndex(
-      //     (item) => item._id === updated._id,
-      //   );
-
-      //   if (index !== -1) {
-      //     state.savedItems[index] = updated;
-      //   }
-      // });
-      // .addCase(updateCustomTool.fulfilled, (state, action) => {
-      //   const updatedTool = action.payload; // This is the tool returned from backend
-
-      //   // 1. Find the index of the tool we just updated
-      //   const index = state.savedItems.findIndex(
-      //     (item) => item._id === updatedTool._id,
-      //   );
-
-      //   if (index !== -1) {
-      //     // 2. Replace the old tool with the new one
-      //     state.savedItems[index] = updatedTool;
-
-      //     // 3. OPTIONAL: If you want to be 100% sure the UI triggers,
-      //     // you can force a new array reference (though RTK handles this under the hood)
-      //     state.savedItems = [...state.savedItems];
-      //   }
-
-      //   state.loading = false;
-      // });
-
-      //       .addCase(updateCustomTool.fulfilled, (state, action) => {
-      //   const updatedTool = action.payload.tool || action.payload;
-
-      //   const index = state.savedItems.findIndex(
-      //     (item) => item._id === updatedTool._id
-      //   );
-
-      //   if (index !== -1) {
-      //     const newItems = [...state.savedItems];
-
-      //     newItems[index] = {
-      //       ...updatedTool,
-      //       updatedAt: new Date().toISOString(), // 🔥 FORCE CHANGE
-      //     };
-
-      //     state.savedItems = newItems; // 🔥 NEW ARRAY
-      //   }
-      // });
-
       .addCase(updateCustomTool.fulfilled, (state, action) => {
         const updatedTool = action.payload.tool || action.payload;
 

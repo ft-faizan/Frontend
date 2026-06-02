@@ -1,28 +1,4 @@
-/* @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-:root {
-  --bg-gradient:
-    radial-gradient(circle at 15% 20%, #f5f7ff 0%, transparent 50%),
-    radial-gradient(circle at 85% 80%, #eef1ff 0%, transparent 50%);
-}
-
-.dark {
-  --bg-gradient:
-    radial-gradient(circle at 15% 20%, #1f2235 0%, transparent 50%),
-    radial-gradient(circle at 85% 80%, #12131f 0%, transparent 50%);
-}
-
-body {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  background-color: #f5f7ff;
-  background-image: var(--bg-gradient);
-}
-
-.dark body {
-  background-color: #12131f;
-} */
 
 @import "tailwindcss";
 

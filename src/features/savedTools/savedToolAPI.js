@@ -1,21 +1,3 @@
-// import API from "../../services/api";
-
-// export const saveToolAPI = (formData) => 
-//   API.post("/saved-tools", formData, {
-//     headers: { "Content-Type": "multipart/form-data" },
-//   });
-
-// export const getSavedToolsAPI = (params) => API.get("/saved-tools", { params });
-
-// export const deleteSavedToolAPI = (id) => API.delete(`/saved-tools/${id}`);
-
-// // export const moveSavedToolAPI = (id, folderId) => 
-// //   API.put(`/saved-tools/${id}/move`, { folderId });
-
-// export const moveSavedToolAPI = (id, data) => 
-//   API.put(`/saved-tools/${id}/move`, data);
-
-
 
 import API from "../../services/api";
 

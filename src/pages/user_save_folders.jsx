@@ -1,10 +1,11 @@
-
-
 // v3
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSavedTools, deleteSavedTool } from "../features/savedTools/savedToolSlice";
+import {
+  fetchSavedTools,
+  deleteSavedTool,
+} from "../features/savedTools/savedToolSlice";
 import ToolCardList from "../components/reuseable_compo/ToolCardList";
 import AddCustomToolModal from "../components/user_save_compo/AddCustomToolModal";
 import ToolFilters from "../components/reuseable_compo/ToolFilters";
@@ -15,7 +16,7 @@ function User_save_folders() {
   const { id } = useParams(); // Current Folder ID
   const location = useLocation();
   const dispatch = useDispatch();
-  
+
   // 1. Redux State
   const { savedItems, loading } = useSelector((state) => state.savedTools);
 
@@ -41,7 +42,7 @@ function User_save_folders() {
   // 4. Logic: Get tools belonging ONLY to this folder
   const toolsInThisFolder = useMemo(() => {
     return savedItems.filter(
-      (item) => item.folderId?._id === id || item.folderId === id
+      (item) => item.folderId?._id === id || item.folderId === id,
     );
   }, [savedItems, id]);
 
@@ -69,15 +70,20 @@ function User_save_folders() {
   const filteredTools = useMemo(() => {
     return toolsInThisFolder.filter((item) => {
       // Search Filter
-      const toolName = item.type === "platform" ? item.toolId?.name : item.toolname;
-      const matchesSearch = (toolName || "").toLowerCase().includes((filters.search || "").toLowerCase());
+      const toolName =
+        item.type === "platform" ? item.toolId?.name : item.toolname;
+      const matchesSearch = (toolName || "")
+        .toLowerCase()
+        .includes((filters.search || "").toLowerCase());
 
       // Type Filter
-      const matchesType = filters.toolType === "all" || item.type === filters.toolType;
+      const matchesType =
+        filters.toolType === "all" || item.type === filters.toolType;
 
       // Category Filter
       const itemCatId = item.toolId?.category?._id || item.toolId?.category;
-      const matchesCategory = !filters.category || itemCatId === filters.category;
+      const matchesCategory =
+        !filters.category || itemCatId === filters.category;
 
       return matchesSearch && matchesType && matchesCategory;
     });
@@ -111,25 +117,13 @@ function User_save_folders() {
   return (
     <div className="h-[90vh] overflow-y-scroll p-5">
       {/* Header Section */}
-      {/* <div className="mb-5 flex flex-wrap justify-end items-center gap-4">
-        
-         <SlidingButton
-              icon={<FaPlus className="text-white text-base" />}
-              text="Add Custom Tools"
-              onClick={() => {
-                setSelectedCustomTool(null);
-                setIsCustomModalOpen(true);
-              }}
-              width="w-[220px]"
-            />
-      </div> */}
-      <div className="flex items-center justify-between gap-3 mb-5">
 
-  {/* BACK BUTTON */}
-  <button
-    type="button"
-    onClick={() => window.history.back()}
-    className="
+      <div className="flex items-center justify-between gap-3 mb-5">
+        {/* BACK BUTTON */}
+        <button
+          type="button"
+          onClick={() => window.history.back()}
+          className="
       relative
       group
 
@@ -158,10 +152,10 @@ function User_save_folders() {
       transition-all
       duration-300
     "
-  >
-    {/* ICON */}
-    <span
-      className="
+        >
+          {/* ICON */}
+          <span
+            className="
         absolute
         left-0
         top-0
@@ -180,13 +174,13 @@ function User_save_folders() {
 
         group-hover:w-full
       "
-    >
-      <FaArrowLeft className="text-white" />
-    </span>
+          >
+            <FaArrowLeft className="text-white" />
+          </span>
 
-    {/* TEXT */}
-    <span
-      className="
+          {/* TEXT */}
+          <span
+            className="
         absolute
         right-0
 
@@ -203,23 +197,22 @@ function User_save_folders() {
         relative
         left-[68px]
       "
-    >
-      Back to Saved
-    </span>
-  </button>
+          >
+            Back to Saved
+          </span>
+        </button>
 
-  {/* RIGHT BUTTON */}
-  <SlidingButton
-    icon={<FaPlus className="text-white text-base" />}
-    text="Add Custom Tools"
-    onClick={() => {
-      setSelectedCustomTool(null);
-      setIsCustomModalOpen(true);
-    }}
-    width="w-[220px]"
-  />
-
-</div>
+        {/* RIGHT BUTTON */}
+        <SlidingButton
+          icon={<FaPlus className="text-white text-base" />}
+          text="Add Custom Tools"
+          onClick={() => {
+            setSelectedCustomTool(null);
+            setIsCustomModalOpen(true);
+          }}
+          width="w-[220px]"
+        />
+      </div>
 
       {/* Filter Component */}
       <ToolFilters
@@ -227,81 +220,65 @@ function User_save_folders() {
         filters={filters}
         categories={dynamicCategories}
         onFilterChange={handleFilterChange}
-        onClear={() => setFilters({ search: "", toolType: "all", category: "" })}
+        onClear={() =>
+          setFilters({ search: "", toolType: "all", category: "" })
+        }
       />
 
       {/* Tool List */}
       <div className="mt-[30px]">
         <ToolCardList
-        tools={paginatedTools}
-        mode="saved"
-        loading={loading}
-        onEdit={handleEditClick}
-        onDelete={handleRemoveSaved}
-      />
-
+          tools={paginatedTools}
+          mode="saved"
+          loading={loading}
+          onEdit={handleEditClick}
+          onDelete={handleRemoveSaved}
+        />
       </div>
-      
+
       {/* Pagination UI */}
       {totalToolPages > 1 && (
-        // <div className="flex justify-center gap-2 mt-10">
-        //   {[...Array(totalToolPages)].map((_, i) => (
-        //     <button
-        //       key={i}
-        //       onClick={() => setToolPage(i + 1)}
-        //       className={`w-10 h-10 rounded-lg font-bold transition-all ${
-        //         toolPage === i + 1 
-        //           ? "bg-[#286FF0] text-white shadow-lg" 
-        //           : "bg-[#1c1f26] text-gray-500 hover:text-gray-300"
-        //       }`}
-        //     >
-        //       {i + 1}
-        //     </button>
-        //   ))}
-        // </div>
         <div className="flex justify-center items-center gap-4 mt-10 pb-10">
-  
-  {/* PREV BUTTON */}
-  <button
-    type="button"
-    onClick={() => setToolPage((p) => Math.max(p - 1, 1))}
-    disabled={toolPage === 1}
-    className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-  >
-    Prev
-  </button>
+          {/* PREV BUTTON */}
+          <button
+            type="button"
+            onClick={() => setToolPage((p) => Math.max(p - 1, 1))}
+            disabled={toolPage === 1}
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+          >
+            Prev
+          </button>
 
-  {/* PAGE BUTTONS */}
-  <div className="flex gap-1.5">
-    {Array.from({ length: totalToolPages }, (_, i) => i + 1).map((p) => (
-      <button
-        key={p}
-        type="button"
-        onClick={() => setToolPage(p)}
-        className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
-          toolPage === p
-            ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
-            : "text-slate-400 hover:bg-white hover:text-blue-600"
-        }`}
-      >
-        {p}
-      </button>
-    ))}
-  </div>
+          {/* PAGE BUTTONS */}
+          <div className="flex gap-1.5">
+            {Array.from({ length: totalToolPages }, (_, i) => i + 1).map(
+              (p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setToolPage(p)}
+                  className={`h-8 min-w-[32px] px-2 rounded-xl text-xs font-bold transition-all ${
+                    toolPage === p
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/15"
+                      : "text-slate-400 hover:bg-white hover:text-blue-600"
+                  }`}
+                >
+                  {p}
+                </button>
+              ),
+            )}
+          </div>
 
-  {/* NEXT BUTTON */}
-  <button
-    type="button"
-    onClick={() =>
-      setToolPage((p) => Math.min(p + 1, totalToolPages))
-    }
-    disabled={toolPage === totalToolPages}
-    className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-  >
-    Next
-  </button>
-
-</div>
+          {/* NEXT BUTTON */}
+          <button
+            type="button"
+            onClick={() => setToolPage((p) => Math.min(p + 1, totalToolPages))}
+            disabled={toolPage === totalToolPages}
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#3075E8] bg-white hover:text-white hover:bg-[#3075E8] transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
       )}
 
       {/* Modal */}

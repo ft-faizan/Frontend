@@ -303,22 +303,7 @@ export default function Signin_signup_form({ showRole = false }) {
 
   const switchTab = (t) => { if (t === tab) return; setTab(t); };
 
-  // 🔥 HANDLERS
-//  const handleLogin = async () => {
-//   const res = await dispatch(loginUser({ email, password }));
-
-//   if (loginUser.fulfilled.match(res)) {
-//     showToast("Login successful ✅", "success");
-
-//     const user = res.payload?.user || res.payload;
-
-//     if (user.role === "superadmin") navigate("/super-admin");
-//     else if (user.role === "admin") navigate("/admin");
-//     else navigate("/dashboard");
-//   } else {
-//     showToast(res.payload, "error");
-//   }
-// };
+  
 
 const handleLogin = async () => {
   const res = await dispatch(loginUser({ email, password }));
@@ -339,23 +324,7 @@ const handleLogin = async () => {
   }
 };
 
-//  const handleRegister = async () => {
-//   const res = await dispatch(
-//     registerUser({ name, email, password, role })
-//   );
 
-//   if (registerUser.fulfilled.match(res)) {
-//     showToast("Signup successful 🎉", "success");
-
-//     const user = res.payload.user; // 🔥 IMPORTANT
-
-//     if (user.role === "superadmin") navigate("/super-admin");
-//     else if (user.role === "admin") navigate("/admin");
-//     else navigate("/dashboard");
-//   } else {
-//     showToast(res.payload, "error");
-//   }
-// };
 
 const handleRegister = async () => {
   const res = await dispatch(

@@ -21,6 +21,7 @@ const ToolCardList = ({ tools, mode, onEdit, onDelete, loading }) => {
       gap-5
       flex-wrap
       justify-center
+      mb-[70px]
             "
     >
       {tools.map((tool) => (

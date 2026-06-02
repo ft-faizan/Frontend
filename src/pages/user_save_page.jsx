@@ -1,5 +1,3 @@
-
-
 // v3
 
 import { useState, useEffect, useMemo } from "react";
@@ -152,33 +150,6 @@ function User_save_page() {
     if (window.confirm("Remove this tool?")) dispatch(deleteSavedTool(id));
   };
 
-  // const handleDeleteFolder = (id) => {
-  //   if (
-  //     window.confirm("Delete folder? Tools inside will be moved to default.")
-  //   ) {
-  //     dispatch(deleteFolder(id));
-  //   }
-  // };
-
-  //   const handleDeleteFolder = async (id) => {
-  //   if (
-  //     window.confirm(
-  //       "Delete folder? Tools inside will be moved to default."
-  //     )
-  //   ) {
-  //     try {
-  //       await dispatch(deleteFolder(id)).unwrap();
-
-  //       showToast(
-  //         "Folder deleted successfully",
-  //         "error"
-  //       );
-  //     } catch (err) {
-  //       showToast(err || "Failed to delete folder", "error");
-  //     }
-  //   }
-  // };
-
   const handleDeleteFolder = async (id) => {
     try {
       await dispatch(deleteFolder(id)).unwrap();
@@ -188,14 +159,6 @@ function User_save_page() {
       showToast(err || "Failed to delete folder", "error");
     }
   };
-
-  // const handleFolderConfirm = (name) => {
-  //   if (selectedFolder) {
-  //     dispatch(updateFolder({ id: selectedFolder._id, name }));
-  //   } else {
-  //     dispatch(createFolder(name));
-  //   }
-  // };
 
   const handleFolderConfirm = async (name) => {
     try {
@@ -231,19 +194,6 @@ function User_save_page() {
   const content = {
     saved_tools: (
       <>
-        {/* <div className="flex justify-between items-center mb-6">
-          
-          <button
-            onClick={() => {
-              setSelectedCustomTool(null);
-              setIsCustomModalOpen(true);
-            }}
-            className="bg-[#286FF0] text-white px-4 py-2 rounded-xl font-bold text-sm"
-          >
-            + Add Custom Tool
-          </button>
-        </div> */}
-
         <ToolFilters
           type="user_saved"
           filters={filters}
@@ -263,23 +213,6 @@ function User_save_page() {
           />
         </div>
 
-        {/* {totalToolPages > 1 && (
-          <div className="flex justify-center gap-2 mt-10">
-            {[...Array(totalToolPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setToolPage(i + 1)}
-                className={`w-10 h-10 rounded-lg font-bold transition-all ${
-                  toolPage === i + 1
-                    ? "bg-[#286FF0] text-white shadow-lg shadow-blue-500/20"
-                    : "bg-[#1c1f26] text-gray-500 hover:text-gray-300"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )} */}
         {totalToolPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-10 pb-10">
             {/* PREV */}
@@ -406,19 +339,6 @@ function User_save_page() {
           ))}
         </div>
 
-        {/* {totalFolderPages > 1 && (
-          <div className="flex justify-center gap-2 mt-8">
-            {[...Array(totalFolderPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded-md text-sm ${currentPage === i + 1 ? "bg-[#286FF0] text-white" : "bg-[#1c1f26] text-gray-500"}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )} */}
         {totalFolderPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-8 pb-10">
             {/* PREV */}
@@ -483,18 +403,6 @@ function User_save_page() {
           ))}
         </div>
 
-        {/* <div className="flex justify-between items-center mb-6">
-          
-          <SlidingButton
-            icon={<FaPlus className="text-white text-base" />}
-            text="Add Custom Tools"
-            onClick={() => {
-              setSelectedCustomTool(null);
-              setIsCustomModalOpen(true);
-            }}
-            width="w-[220px]"
-          />
-        </div> */}
         <div className="flex justify-between items-center mb-6">
           {activeTab === "saved_tools" ? (
             <SlidingButton

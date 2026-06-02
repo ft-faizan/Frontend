@@ -263,8 +263,6 @@ z-[30]
         })}
       </div>
 
-      
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5  w-full p-1">
         {/* ─── CARD 1: TOOLS STATS ─── */}
         <div className="group relative overflow-hidden bg-white dark:bg-[#0c0e14] border border-gray-100 dark:border-[#1c1f2c] rounded-2xl p-6 flex flex-col justify-between min-h-[145px] transition-all duration-300 hover:shadow-xl hover:shadow-[#3981FA]/5 hover:border-[#3981FA]/30 dark:hover:border-[#3981FA]/30 hover:-translate-y-1 select-none">
@@ -357,24 +355,6 @@ z-[30]
         </div>
       </div>
 
-      {/* 📉 3. GRAPHS SECTION */}
-      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
-        <div className="lg:col-span-2 bg-[#1c1f26] border border-[#2a2d3a] p-6 rounded-2xl">
-          <h3 className="text-white font-bold mb-4">
-            Admin Contributions (Tools & Categories)
-          </h3>
-          <div className="h-[300px]">
-            <canvas ref={barChartRef}></canvas>
-          </div>
-        </div>
-
-        <div className="bg-[#1c1f26] border border-[#2a2d3a] p-6 rounded-2xl">
-          <h3 className="text-white font-bold mb-4">Role Distribution</h3>
-          <div className="h-[300px] flex items-center justify-center">
-            <canvas ref={pieChartRef}></canvas>
-          </div>
-        </div>
-      </div> */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16  w-full p-1">
         {/* ─── CONTAINER 1: BAR CHART (ADMIN CONTRIBUTIONS) ─── */}
         <div className="group relative lg:col-span-2 overflow-hidden bg-white dark:bg-[#0c0e14] border border-gray-100 dark:border-[#1c1f2c] rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-[#3981FA]/5 hover:border-[#3981FA]/30 dark:hover:border-[#3981FA]/30 hover:-translate-y-0.5 select-none">
@@ -453,53 +433,13 @@ function CategoryContent() {
 
   return (
     <div>
-      {/* CREATE BUTTON */}
-      {/* <button
-        onClick={() => {
-          setEditData(null);
-          setOpen(true);
-        }}
-        className="bg-[#3380FF] text-white px-4 py-2 rounded-lg"
-      >
-        + Create Category
-      </button> */}
-
       <CategoryList mode="admin" showCreator={true} />
-
-      {/* MODAL */}
-      {/* <CreateAndEditCategoryModal
-        open={open}
-        onClose={() => setOpen(false)}
-        editData={editData}
-      /> */}
     </div>
   );
 }
 
 // function ToolContent() {
 function ToolContent({ setToolOpen, setToolEditData }) {
-  // const [open, setOpen] = useState(false);
-  // const [editData, setEditData] = useState(null);
-  // const dispatch = useDispatch();
-  // const { tools, loading } = useSelector((state) => state.tools);
-
-  // useEffect(() => {
-  //   dispatch(getTools({ mode: "admin" }));
-  // }, [dispatch]);
-
-  // const handleEdit = (tool) => {
-  //   setEditData(tool);
-  //   setOpen(true);
-  // };
-
-  // const handleDelete = (id) => {
-  //   if (window.confirm("Are you sure you want to delete this tool?")) {
-  //     dispatch(deleteTool(id));
-  //   }
-  // };
-
-  // const [open, setOpen] = useState(false);
-  // const [editData, setEditData] = useState(null);
   const dispatch = useDispatch();
   // const { tools, loading } = useSelector((state) => state.tools);
 
@@ -526,7 +466,7 @@ function ToolContent({ setToolOpen, setToolEditData }) {
       getTools({
         mode: "admin",
         page,
-        limit:27,
+        limit: 27,
         search: filters.search,
         category: filters.category,
       }),
@@ -559,7 +499,6 @@ function ToolContent({ setToolOpen, setToolEditData }) {
     setPage(1);
   };
   return (
-
     <div className="mt-0">
       <div className="px-5 sticky top-0 z-[40]">
         <ToolFilters
@@ -581,7 +520,6 @@ function ToolContent({ setToolOpen, setToolEditData }) {
         />
       </div>
 
-      
       {pages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-10 pb-10">
           {/* PREV */}
@@ -623,11 +561,6 @@ function ToolContent({ setToolOpen, setToolEditData }) {
           </button>
         </div>
       )}
-      {/* <CreateAndEditToolModal
-        open={open}
-        onClose={() => setOpen(false)}
-        editData={editData}
-      /> */}
     </div>
   );
 }
@@ -658,23 +591,6 @@ function Admin_page() {
     <div className=" h-[90vh] overflow-y-scroll p-5 ">
       {/* Header */}
 
-      {/* Tab Bar */}
-      {/* <div className="flex gap-1  bg-white rounded-xl p-1 w-fit mb-7">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer
-              ${
-                activeTab === tab.id
-                  ? "bg-[#3380FF] text-white font-bold"
-                  : "text-gray-500 hover:text-[#3380FF]"
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div> */}
       <div className="flex justify-between items-center mb-5">
         {/* LEFT SIDE TABS */}
         <div className="flex gap-1 bg-white rounded-xl p-1 w-fit">
@@ -696,12 +612,6 @@ function Admin_page() {
         {/* RIGHT SIDE BUTTON */}
         <div>
           {activeTab === "category" ? (
-            // <button
-            //   onClick={() => setCategoryOpen(true)}
-            //   className="bg-[#3380FF] text-white px-6 py-2 rounded-xl font-bold"
-            // >
-            //   + Create Category
-            // </button>
             <SlidingButton
               icon={<FaPlus className="text-white text-base" />}
               text="Create Category"
@@ -709,12 +619,6 @@ function Admin_page() {
               width="w-[205px]"
             />
           ) : activeTab === "tool" ? (
-            // <button
-            //   onClick={() => setToolOpen(true)}
-            //   className="bg-[#3380FF] text-white px-6 py-2 rounded-xl font-bold"
-            // >
-            //   + Create Tool
-            // </button>
             <SlidingButton
               icon={<FaPlus className="text-white text-base" />}
               text="Create Tool"
@@ -726,7 +630,7 @@ function Admin_page() {
       </div>
 
       {/* Tab Content */}
-      {/* <div>{content[activeTab]}</div> */}
+
       <div>
         {!isAuthChecked || !user ? <p>Checking auth...</p> : content[activeTab]}
       </div>
@@ -735,11 +639,7 @@ function Admin_page() {
         open={categoryOpen}
         onClose={() => setCategoryOpen(false)}
       />
-      {/* 
-      <CreateAndEditToolModal
-        open={toolOpen}
-        onClose={() => setToolOpen(false)}
-      /> */}
+
       <CreateAndEditToolModal
         open={toolOpen}
         onClose={() => {

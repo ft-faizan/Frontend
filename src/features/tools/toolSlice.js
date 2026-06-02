@@ -9,19 +9,6 @@ import {
   getCategoryPreviewToolsAPI,
 } from "./toolAPI.js";
 
-// export const getAdminStats = createAsyncThunk(
-//   "tools/getAdminStats",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const response = await getAdminStatsAPI();
-//       return response.data; // This returns { success: true, toolStats, categoryStats }
-//     } catch (error) {
-//       return rejectWithValue(error.response?.data?.message || "Failed to fetch stats");
-//     }
-//   }
-// );
-
-// Create the Thunk for fetching user-specific card stats
 
 export const getCategoryPreviewTools = createAsyncThunk(
   "tools/getCategoryPreviewTools",
@@ -29,10 +16,7 @@ export const getCategoryPreviewTools = createAsyncThunk(
     try {
       const res = await getCategoryPreviewToolsAPI(categoryId);
 
-      // return {
-      //   categoryId,
-      //   tools: res.data.tools,
-      // };
+     
       return {
         categoryId,
 
@@ -154,18 +138,7 @@ const toolSlice = createSlice({
       .addCase(getTools.pending, (state) => {
         state.loading = true;
       })
-      // .addCase(getTools.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.tools = action.payload.tools;
-      // })
-      // .addCase(getTools.fulfilled, (state, action) => {
-      //   state.loading = false;
-
-      //   state.tools = action.payload.tools;
-
-      //   // ✅ ADD THIS
-      //   state.pages = action.payload.pages || 1;
-      // })
+     
       .addCase(getTools.fulfilled, (state, action) => {
         state.loading = false;
 
@@ -204,10 +177,7 @@ const toolSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getCategoryPreviewTools.fulfilled, (state, action) => {
-        // state.categoryPreview[action.payload.categoryId] = {
-        //   tools: action.payload.tools,
-        //   image: action.payload.tools?.[0]?.image?.url || null,
-        // };
+        
         state.categoryPreview[action.payload.categoryId] = {
           tools: action.payload.tools,
 
