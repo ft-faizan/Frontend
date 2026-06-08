@@ -1,5 +1,5 @@
 // v2
-import { useState } from "react";
+import { useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRecentTools } from "../../hooks/useRecentTools.js";
 import {
@@ -22,7 +22,8 @@ const ToolCard = ({ tool, mode, onEdit, onDelete }) => {
   const [hovered, setHovered] = useState(false);
 
   const { savedItems } = useSelector((state) => state.savedTools);
-
+   // after your useState declarations
+const isSaving = useRef(false);
   const isSavedMode = mode === "saved";
   const platformTool = isSavedMode ? tool.toolId : tool;
 
@@ -44,19 +45,43 @@ const ToolCard = ({ tool, mode, onEdit, onDelete }) => {
   // ── logic handlers — untouched ───────────────────────────────────────────
   const handleLeftClickAction = () => setModalOpen(true);
 
+  // const handleRightClickAction = (e) => {
+  //   e.preventDefault();
+  //   if (isSaved) {
+  //     dispatch(deleteSavedTool(savedEntry._id));
+  //     showToast("Tool removed from saved", "success");
+  //   } else {
+  //     const formData = new FormData();
+  //     formData.append("type", "platform");
+  //     formData.append("toolId", tool._id);
+  //     dispatch(saveTool(formData));
+  //     showToast("Tool saved successfully", "success");
+  //   }
+  // };
+
   const handleRightClickAction = (e) => {
-    e.preventDefault();
-    if (isSaved) {
-      dispatch(deleteSavedTool(savedEntry._id));
-      showToast("Tool removed from saved", "success");
-    } else {
-      const formData = new FormData();
-      formData.append("type", "platform");
-      formData.append("toolId", tool._id);
-      dispatch(saveTool(formData));
-      showToast("Tool saved successfully", "success");
-    }
-  };
+  e.preventDefault();
+  if (isSaved) {
+    dispatch(deleteSavedTool(savedEntry._id));
+    showToast("Tool removed from saved", "success");
+    return;
+  }
+
+  // ✅ Block if already saving
+  if (isSaving.current) return;
+  isSaving.current = true;
+
+  const formData = new FormData();
+  formData.append("type", "platform");
+  formData.append("toolId", tool._id);
+
+  dispatch(saveTool(formData))
+    .finally(() => {
+      isSaving.current = false;
+    });
+
+  showToast("Tool saved successfully", "success");
+};
 
   const handleTrashAndDelete = () => {
     if (isCustom) {
@@ -97,10 +122,16 @@ const ToolCard = ({ tool, mode, onEdit, onDelete }) => {
     showToast("Choose a folder to move to", "success");
   };
 
+  // const handlePublicSave = () => {
+  //   handleLeftClickAction();
+  //   if (!isSaved) showToast("Select a folder to save this tool", "success");
+  // };
+
   const handlePublicSave = () => {
-    handleLeftClickAction();
-    if (!isSaved) showToast("Select a folder to save this tool", "success");
-  };
+  if (isSaving.current) return; // ✅ Block double-click on Save button too
+  handleLeftClickAction();
+  if (!isSaved) showToast("Select a folder to save this tool", "success");
+};
 
   const cardH = mode === "saved" && isCustom ? 155 : 155;
 

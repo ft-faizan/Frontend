@@ -111,9 +111,11 @@ function CategoryList({ mode = "user", showCreator = true }) {
 
       {/* 4. CONTENT GRID AREA */}
       {!categories.length && !loading ? (
-        <div className="text-center py-20 border border-dashed border-slate-800 rounded-3xl bg-slate-900/10 max-w-md mx-auto mt-6">
-          <p className="text-sm text-slate-500 font-medium">No system categories match your exact query.</p>
-        </div>
+        <div className="bg-white border border-dashed border-[#296DE2] rounded-2xl p-20 text-center mt-6">
+  <p className="text-[#296DE2]">
+    No system categories match your query.
+  </p>
+</div>
       ) : (
         <>
           <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-2 mb-[60px] transition-opacity duration-300 ${loading ? "opacity-30 pointer-events-none" : "opacity-100"}`}>

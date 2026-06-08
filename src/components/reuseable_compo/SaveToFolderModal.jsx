@@ -1,13 +1,20 @@
-
-
-
-
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFolders } from "../../features/folders/folderSlice";
-import { saveTool, moveSavedTool } from "../../features/savedTools/savedToolSlice";
-import { useToast } from "../../context/ToastContext"; 
-import { Search, Folder, FolderPlus, FolderCheck, X, Plus, MoveRight } from "lucide-react";
+import {
+  saveTool,
+  moveSavedTool,
+} from "../../features/savedTools/savedToolSlice";
+import { useToast } from "../../context/ToastContext";
+import {
+  Search,
+  Folder,
+  FolderPlus,
+  FolderCheck,
+  X,
+  Plus,
+  MoveRight,
+} from "lucide-react";
 
 const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
   const dispatch = useDispatch();
@@ -17,13 +24,14 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const { showToast } = useToast();
-
+  const isSaving = useRef(false);
   // Load folders when modal opens
   useEffect(() => {
     if (open) {
       dispatch(getFolders());
       setSearchTerm("");
       setNewFolderName("");
+      isSaving.current = false;
     }
   }, [open, dispatch]);
 
@@ -38,66 +46,123 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
       return a.name.localeCompare(b.name);
     });
 
+  // const handleAction = (folderId = null, newName = null) => {
+  //   if (savedEntry) {
+  //     dispatch(
+  //       moveSavedTool({
+  //         id: savedEntry._id,
+  //         folderId,
+  //         newFolderName: newName,
+  //       })
+  //     ).then((action) => {
+  //       if (action.meta.requestStatus === "fulfilled") {
+  //         const message = action.payload?.message || "Tool moved successfully ✅";
+  //         // ✅ Toast: move success
+  //         showToast(message, "success");
+  //         if (newName) {
+  //           dispatch(getFolders());
+  //         }
+  //         setTimeout(() => {
+  //           onClose();
+  //         }, 100);
+  //       } else {
+  //         const errorMsg = action.payload || "Something went wrong ❌";
+  //         // ✅ Toast: move error
+  //         showToast(errorMsg, "error");
+  //       }
+  //     });
+  //   } else {
+  //     const formData = new FormData();
+  //     formData.append("type", "platform");
+  //     formData.append("toolId", tool._id);
+
+  //     if (folderId) formData.append("folderId", folderId);
+  //     if (newName) formData.append("newFolderName", newName);
+
+  //     dispatch(saveTool(formData)).then((action) => {
+  //       if (action.meta.requestStatus === "fulfilled") {
+  //         // ✅ Toast: save success
+  //         if (newName) {
+  //           showToast(`Tool saved to new folder "${newName}" 🚀`, "success");
+  //           dispatch(getFolders());
+  //         } else if (folderId) {
+  //           const folderName = folders.find((f) => f._id === folderId)?.name || "folder";
+  //           showToast(`Tool saved to "${folderName}" ✅`, "success");
+  //         } else {
+  //           showToast("Tool saved successfully ✅", "success");
+  //         }
+  //         onClose();
+  //       } else {
+  //         // ✅ Toast: save error
+  //         showToast(action.payload || "Failed to save tool ❌", "error");
+  //       }
+  //     });
+  //   }
+  // };
+
   const handleAction = (folderId = null, newName = null) => {
+    if (isSaving.current) return; // ✅ block if already in-flight
+    isSaving.current = true;
+
     if (savedEntry) {
       dispatch(
         moveSavedTool({
           id: savedEntry._id,
           folderId,
           newFolderName: newName,
-        })
-      ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
-          const message = action.payload?.message || "Tool moved successfully ✅";
-          // ✅ Toast: move success
-          showToast(message, "success");
-          if (newName) {
-            dispatch(getFolders());
+        }),
+      )
+        .then((action) => {
+          if (action.meta.requestStatus === "fulfilled") {
+            const message =
+              action.payload?.message || "Tool moved successfully ✅";
+            showToast(message, "success");
+            if (newName) dispatch(getFolders());
+            setTimeout(() => onClose(), 100);
+          } else {
+            showToast(action.payload || "Something went wrong ❌", "error");
           }
-          setTimeout(() => {
-            onClose();
-          }, 100);
-        } else {
-          const errorMsg = action.payload || "Something went wrong ❌";
-          // ✅ Toast: move error
-          showToast(errorMsg, "error");
-        }
-      });
+        })
+        .finally(() => {
+          isSaving.current = false; // ✅ unlock after dispatch settles
+        });
     } else {
       const formData = new FormData();
       formData.append("type", "platform");
       formData.append("toolId", tool._id);
-
       if (folderId) formData.append("folderId", folderId);
       if (newName) formData.append("newFolderName", newName);
 
-      dispatch(saveTool(formData)).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
-          // ✅ Toast: save success
-          if (newName) {
-            showToast(`Tool saved to new folder "${newName}" 🚀`, "success");
-            dispatch(getFolders());
-          } else if (folderId) {
-            const folderName = folders.find((f) => f._id === folderId)?.name || "folder";
-            showToast(`Tool saved to "${folderName}" ✅`, "success");
+      dispatch(saveTool(formData))
+        .then((action) => {
+          if (action.meta.requestStatus === "fulfilled") {
+            if (newName) {
+              showToast(`Tool saved to new folder "${newName}" 🚀`, "success");
+              dispatch(getFolders());
+            } else if (folderId) {
+              const folderName =
+                folders.find((f) => f._id === folderId)?.name || "folder";
+              showToast(`Tool saved to "${folderName}" ✅`, "success");
+            } else {
+              showToast("Tool saved successfully ✅", "success");
+            }
+            onClose();
           } else {
-            showToast("Tool saved successfully ✅", "success");
+            showToast(action.payload || "Failed to save tool ❌", "error");
           }
-          onClose();
-        } else {
-          // ✅ Toast: save error
-          showToast(action.payload || "Failed to save tool ❌", "error");
-        }
-      });
+        })
+        .finally(() => {
+          isSaving.current = false; // ✅ unlock after dispatch settles
+        });
     }
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200"
       onClick={onClose}
     >
-      <div 
+      <div
         className="relative bg-white dark:bg-[#0c0e14] border border-gray-100 dark:border-[#1c1f2c] w-full max-w-[290px] rounded-2xl shadow-2xl overflow-hidden select-none animate-modal-in"
         onClick={(e) => e.stopPropagation()}
       >
@@ -109,7 +174,7 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
           <p className="text-[#3981FA] text-[10px] font-extrabold uppercase tracking-widest text-center flex-grow">
             {isMoving ? "Move Directory Node" : "Save to Collection"}
           </p>
-          <button 
+          <button
             onClick={onClose}
             className="text-slate-400 hover:text-red-400 transition-colors absolute right-3"
           >
@@ -120,11 +185,15 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
         {/* TOP SECTION: Quick Save / Default Save */}
         {!hasDefaultFolder && (
           <div className="p-3 border-b border-gray-100 dark:border-slate-900/60 relative z-10">
-            <button 
+            <button
               onClick={() => handleAction(null)}
               className="w-full bg-[#3981FA] hover:bg-blue-600 text-white py-2 rounded-xl font-bold text-xs shadow-md shadow-[#3981FA]/10 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
             >
-              {isMoving ? <MoveRight size={13} /> : <Plus size={13} strokeWidth={3} />} 
+              {isMoving ? (
+                <MoveRight size={13} />
+              ) : (
+                <Plus size={13} strokeWidth={3} />
+              )}
               <span>{isMoving ? "Move to Saved Tools" : "Normal Save"}</span>
             </button>
           </div>
@@ -132,10 +201,12 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
 
         {/* MIDDLE SECTION: Search & Folders Scroll Track */}
         <div className="p-3 border-b border-gray-100 dark:border-slate-900/60 bg-slate-50/50 dark:bg-[#141722]/20 relative z-10">
-          
           {/* Enhanced Search Input */}
           <div className="relative flex items-center group mb-2.5">
-            <Search size={12} className="absolute left-3 text-slate-400 group-focus-within:text-[#3981FA] transition-colors" />
+            <Search
+              size={12}
+              className="absolute left-3 text-slate-400 group-focus-within:text-[#3981FA] transition-colors"
+            />
             <input
               type="text"
               placeholder="Search folders..."
@@ -148,8 +219,10 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
           {/* Folder Listing Container */}
           <div className="max-h-40 overflow-y-auto pr-1 space-y-0.5 scrollbar-premium">
             {filteredFolders.map((folder) => {
-              const isCurrentFolder = savedEntry?.folderId?._id === folder._id || savedEntry?.folderId === folder._id;
-              
+              const isCurrentFolder =
+                savedEntry?.folderId?._id === folder._id ||
+                savedEntry?.folderId === folder._id;
+
               return (
                 <button
                   key={folder._id}
@@ -161,7 +234,10 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
                     {isCurrentFolder ? (
                       <FolderCheck size={13} className="text-[#3981FA]" />
                     ) : (
-                      <Folder size={13} className="text-slate-400 dark:text-gray-500 group-hover:text-[#3981FA] transition-colors" />
+                      <Folder
+                        size={13}
+                        className="text-slate-400 dark:text-gray-500 group-hover:text-[#3981FA] transition-colors"
+                      />
                     )}
                     <span className="truncate font-medium">{folder.name}</span>
                   </div>
@@ -173,7 +249,7 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
                 </button>
               );
             })}
-            
+
             {filteredFolders.length === 0 && searchTerm && (
               <p className="text-center py-4 text-slate-400 dark:text-gray-600 text-[11px] font-medium italic">
                 No folders found

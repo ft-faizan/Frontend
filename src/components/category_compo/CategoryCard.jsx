@@ -106,7 +106,7 @@ function CategoryCard({ category, mode, showCreator = true, onEdit }) {
                 {marqueeTools.map((tool, idx) => (
                   <button
                     key={`${tool._id}-top-${idx}`}
-                    onClick={() => handleToolClick(tool._id)}
+                    // onClick={() => handleToolClick(tool._id)}
                     onMouseEnter={() => setHoveredToolId(tool._id)}
                     onMouseLeave={() => setHoveredToolId(null)}
                     className="pill-card group/pill"

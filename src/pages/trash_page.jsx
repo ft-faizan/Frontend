@@ -127,21 +127,11 @@ function TrashPage() {
       <div className="relative z-10 ">
         {trashItems.length === 0 ? (
           /* EMPTY STATE DESIGN */
-          <div className="relative overflow-hidden flex flex-col items-center justify-center text-center px-6 py-16 border border-[#3981FA] bg-white backdrop-blur-xl rounded-3xl mt-12 shadow-2xl">
-            <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(51,128,255,0.02),transparent_60%)] pointer-events-none" />
-
-            {/* <div className="relative w-12 h-12 rounded-2xl bg-slate-900/40 border border-slate-800/60 flex items-center justify-center text-slate-500 mb-4 shadow-inner">
-              <Inbox size={20} strokeWidth={1.5} />
-            </div> */}
-
-            <h4 className="text-[#3981FA] text-sm font-semibold tracking-tight mb-1">
-              Archive Is Clean
-            </h4>
-            <p className="text-slate-500 text-xs leading-relaxed max-w-[260px]">
-              No deleted workspace elements or disconnected custom node layers
-              found.
-            </p>
-          </div>
+         <div className="bg-white border border-dashed border-[#296DE2] rounded-2xl p-20 text-center mt-12">
+  <p className="text-[#296DE2]">
+    No deleted items found.
+  </p>
+</div>
         ) : (
           <>
             {/* TRANSITION CARD GRID */}
