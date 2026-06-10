@@ -1,6 +1,6 @@
 // v3
 import { useEffect, useState, useMemo } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSavedTools,
@@ -16,7 +16,7 @@ function User_save_folders() {
   const { id } = useParams(); // Current Folder ID
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   // 1. Redux State
   const { savedItems, loading } = useSelector((state) => state.savedTools);
 
@@ -119,86 +119,21 @@ function User_save_folders() {
       {/* Header Section */}
 
       <div className="flex items-center justify-between gap-3 mb-5">
-        {/* BACK BUTTON */}
+       
+
         <button
           type="button"
-          onClick={() => window.history.back()}
-          className="
-      relative
-      group
-
-      w-[200px]
-      h-[44px]
-
-      cursor-pointer
-
-      flex
-      items-center
-
-      rounded-xl
-
-      border
-      border-[#3380FF]/50
-
-      bg-[#3380FF]
-
-      overflow-hidden
-
-      shadow-lg
-      shadow-[#3380FF]/10
-
-      active:scale-[0.98]
-
-      transition-all
-      duration-300
-    "
+          onClick={() => navigate("/users_save", { state: { activeTab: "saved_tools_folders" } })} // 🔥 Route explicitly with state payload
+          className="relative group w-[140px] h-[44px] cursor-pointer flex items-center rounded-xl border border-[#3380FF]/50 bg-[#3380FF] overflow-hidden shadow-lg shadow-[#3380FF]/10 active:scale-[0.98] transition-all duration-300"
         >
           {/* ICON */}
-          <span
-            className="
-        absolute
-        left-0
-        top-0
-        bottom-0
-
-        w-[42px]
-
-        bg-[#226ce6]
-
-        flex
-        items-center
-        justify-center
-
-        transition-all
-        duration-300
-
-        group-hover:w-full
-      "
-          >
+          <span className="absolute left-0 top-0 bottom-0 w-[42px] bg-[#226ce6] flex items-center justify-center transition-all duration-300 group-hover:w-full">
             <FaArrowLeft className="text-white" />
           </span>
 
           {/* TEXT */}
-          <span
-            className="
-        absolute
-        right-0
-
-        text-white
-        font-semibold
-        text-sm
-        tracking-wide
-
-        transition-all
-        duration-300
-
-        group-hover:text-transparent
-
-        relative
-        left-[68px]
-      "
-          >
-            Back to Saved
+          <span className="absolute right-0 text-white font-semibold text-sm tracking-wide transition-all duration-300 group-hover:text-transparent relative left-[68px]">
+            Back
           </span>
         </button>
 

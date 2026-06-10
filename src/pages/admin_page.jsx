@@ -521,7 +521,7 @@ function ToolContent({ setToolOpen, setToolEditData }) {
       </div>
 
       {pages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-10 pb-10">
+        <div className="flex justify-center items-center gap-4 mt-10 pb-10 mb-[35px]">
           {/* PREV */}
           <button
             type="button"
