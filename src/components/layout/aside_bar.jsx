@@ -1,6 +1,10 @@
+
+
+"use client";
+
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Settings_menu from "../nav_compo/settings_menu.jsx";
 import { logoutUser } from "../../features/auth/authSlice.js";
 import { useToast } from "../../context/ToastContext.jsx";
@@ -8,17 +12,18 @@ import { IoLogOut } from "react-icons/io5";
 import { TiHome } from "react-icons/ti";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { BsBookmarkDashFill } from "react-icons/bs";
-import { BsInfoSquareFill } from "react-icons/bs";
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
-import { MdAdminPanelSettings } from "react-icons/md";
 import { FaTrashCan } from "react-icons/fa6";
-import ConfirmModal from "../reuseable_compo/ConfirmModal.jsx";
+import { MdOutlineAdminPanelSettings, MdAdminPanelSettings } from "react-icons/md";
+import ConfirmModal from "../reuseable_compo/ConfirmModal.jsx"; 
 
 function Aside_bar({ toggleSidebar }) {
   const user = useSelector((state) => state.auth.user);
   const location = useLocation();
   const dispatch = useDispatch();
   const { showToast } = useToast();
+
+  // 🎛️ LOGOUT MODAL CONTROL STATE
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const menuItems = [
     {
@@ -46,26 +51,21 @@ function Aside_bar({ toggleSidebar }) {
       icon: <FaTrashCan />,
     },
     {
-      name: "Admin ",
+      name: "Admin",
       path: "/admin",
       roles: ["admin", "superadmin"],
       icon: <MdOutlineAdminPanelSettings />,
     },
     {
-      name: "Super Admin ",
+      name: "Super Admin",
       path: "/super-admin",
       roles: ["superadmin"],
       icon: <MdAdminPanelSettings />,
     },
-    // {
-    //   name: "About",
-    //   path: "/about",
-    //   roles: ["user", "admin", "superadmin"],
-    //   icon: <BsInfoSquareFill />,
-    // },
   ];
 
-  const handleLogout = () => {
+  // Actual session clear execution sequence
+  const handleLogoutConfirm = () => {
     localStorage.removeItem("recentTools");
     window.dispatchEvent(new Event("recentToolsUpdated"));
 
@@ -87,45 +87,44 @@ function Aside_bar({ toggleSidebar }) {
   };
 
   return (
-    <div className="bg-white dark:bg-[#0c0e14] min-[1330px]:bg-transparent w-full h-[90vh] border-r border-gray-100 dark:border-[#1c1f2c] p-5 flex flex-col justify-between overflow-y-auto scrollbar-premium">
+    <div className="bg-white dark:bg-[#0c0e14] min-[1330px]:bg-transparent w-full h-[90vh] border-r border-gray-300 dark:border-[#1c1f2c] p-5 flex flex-col justify-between overflow-y-auto scrollbar-premium">
+      
       {/* ─── MENU SECTION ─── */}
       <div className="flex flex-col gap-2">
         {menuItems
           .filter((item) => item.roles.includes(user?.role))
           .map((item) => {
-            // const isActive =
-            //   item.path === "/"
-            //     ? location.pathname === "/"
-            //     : location.pathname === item.path ||
-            //       location.pathname.startsWith(item.path + "/");
-
             const isActive =
               item.path === "/"
                 ? location.pathname === "/"
                 : item.path === "/users_save"
-                  ? location.pathname.startsWith("/users_save") ||
-                    location.pathname.startsWith("/saved")
-                  : location.pathname === item.path ||
-                    location.pathname.startsWith(item.path + "/");
+                  ? location.pathname.startsWith("/users_save") || location.pathname.startsWith("/saved")
+                  : location.pathname === item.path || location.pathname.startsWith(item.path + "/");
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={toggleSidebar}
-                /* ⚡ FIX 2: Updated selection highlights to match your exact #3981FA brand system */
-                className={`flex items-center gap-3 px-[15px] py-[14px] rounded-xl text-sm font-semibold transition-all duration-150 ${
-                  isActive
-                    ? "bg-[#3981FA] text-white shadow-lg shadow-[#3981FA]/15"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#141722]/60 hover:text-gray-900 dark:hover:text-white"
-                }`}
+                className="relative group w-full h-[44px] flex items-center rounded-xl overflow-hidden active:scale-[0.98] transition-all duration-300 bg-[#3981FA] border border-[#3981FA]/50 text-white shadow-lg shadow-[#3981FA]/10"
               >
                 <span
-                  className={`text-lg ${isActive ? "text-white" : "text-slate-400 dark:text-slate-500"}`}
+                  className={`
+                    absolute left-0 top-0 bottom-0 flex items-center justify-center transition-all duration-300 z-10 bg-[#2770E6] text-white
+                    ${isActive ? "w-full" : "w-[42px] group-hover:w-full"}
+                  `}
                 >
                   {item.icon}
                 </span>
-                <span>{item.name}</span>
+
+                <span
+                  className={`
+                    absolute left-[54px] font-semibold text-sm tracking-wide transition-all duration-300 z-0 text-white
+                    ${isActive ? "text-transparent translate-x-4" : "group-hover:text-transparent group-hover:translate-x-4"}
+                  `}
+                >
+                  {item.name}
+                </span>
               </Link>
             );
           })}
@@ -142,19 +141,15 @@ function Aside_bar({ toggleSidebar }) {
       {/* ─── USER INTERFACE CARD FOOTER ─── */}
       <div className="w-full pt-4 border-t border-gray-100 dark:border-[#1c1f2c]">
         <div className="relative w-full rounded-2xl overflow-hidden border border-gray-100 dark:border-[#1c1f2c] bg-slate-50/50 dark:bg-[#141722]/30 backdrop-blur-md shadow-sm">
-          {/* Brand Identity Accent Header Line */}
           <div className="h-[2px] w-full bg-gradient-to-r from-[#3981FA] via-blue-400 to-[#3981FA]/40" />
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-3">
-            {/* User Meta Summary Elements */}
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              {/* Avatar Box Wrapper Container */}
               <div className="relative flex-shrink-0 w-10 h-10 rounded-xl bg-[#3981FA] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#3981FA]/10">
                 {firstLetter}
                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0c0e14]" />
               </div>
 
-              {/* Informational Text Blocks */}
               <div className="flex-1 min-w-0 space-y-0.5">
                 <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
                   {user?.name || "User"}
@@ -162,8 +157,6 @@ function Aside_bar({ toggleSidebar }) {
                 <p className="text-[11px] font-medium text-slate-400 dark:text-gray-500 truncate">
                   {user?.email}
                 </p>
-
-                {/* Role Allocation Badge Frame */}
                 <div className="pt-0.5">
                   <span
                     className={`inline-flex items-center px-1.5 py-0.5 text-[8px] font-extrabold tracking-wider uppercase rounded-md border ${
@@ -180,24 +173,32 @@ function Aside_bar({ toggleSidebar }) {
               </div>
             </div>
 
-            {/* Logout Trigger Component Option */}
+            {/* ⚡ INTERCEPTED TRIGGER: Fires state change to open confirmation system */}
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => setLogoutModalOpen(true)}
               title="Logout Node Session"
               className="flex-shrink-0 w-full sm:w-8 sm:h-8 h-9 flex items-center justify-center gap-2 sm:gap-0 rounded-lg border border-gray-200/60 dark:border-slate-800 bg-white dark:bg-[#0c0e14] text-slate-400 hover:bg-red-500/5 dark:hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 outline-none transition-all active:scale-[0.96] group"
             >
-              <span className="sm:hidden text-xs font-bold">
-                Logout Session
-              </span>
-              <IoLogOut
-                size={15}
-                className="transition-transform duration-200 group-hover:translate-x-0.5"
-              />
+              <span className="sm:hidden text-xs font-bold">Logout Session</span>
+              <IoLogOut size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </button>
           </div>
         </div>
       </div>
+
+      {/* ─── MOUNT CONTEXT PORTAL MODAL ─── */}
+      <ConfirmModal
+        open={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleLogoutConfirm}
+        title="Logout Account"
+        message="Are you sure you want to logout from your account?"
+        confirmText="Logout"
+        cancelText="Stay Here"
+        type="logout"
+      />
+
     </div>
   );
 }

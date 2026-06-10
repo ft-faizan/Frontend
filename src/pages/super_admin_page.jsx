@@ -725,7 +725,7 @@ function Super_admin_page() {
   return (
     <div className=" h-[90vh] overflow-y-scroll p-5">
       {/* Tab Bar */}
-      <div className="flex gap-1 bg-white rounded-xl p-1 w-fit mb-7">
+      <div className="flex gap-1 bg-white rounded-xl p-1 w-fit mb-5">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -733,7 +733,7 @@ function Super_admin_page() {
             className={`px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer
               ${
                 activeTab === tab.id
-                  ? "bg-[#2D64E6] text-white font-bold"
+                  ? "bg-[#3981FA] text-white font-bold"
                   : "text-gray-500 hover:text-gray-300"
               }`}
           >

@@ -420,7 +420,7 @@ function User_save_page() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id ? "bg-[#286FF0] text-white font-bold" : "text-gray-500 hover:text-[#2F70EB]"}`}
+              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id ? "bg-[#3E81F4] text-white font-bold" : "text-gray-500 hover:text-[#2F70EB]"}`}
             >
               {tab.label}
             </button>
