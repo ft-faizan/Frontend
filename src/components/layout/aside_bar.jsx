@@ -1,5 +1,3 @@
-
-
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -17,7 +15,6 @@ import { FaTrashCan } from "react-icons/fa6";
 import ConfirmModal from "../reuseable_compo/ConfirmModal.jsx";
 
 function Aside_bar({ toggleSidebar }) {
- 
   const user = useSelector((state) => state.auth.user);
   const location = useLocation();
   const dispatch = useDispatch();
@@ -90,22 +87,34 @@ function Aside_bar({ toggleSidebar }) {
   };
 
   return (
-    
-    
     <div className="bg-white dark:bg-[#0c0e14] min-[1330px]:bg-transparent w-full h-[90vh] border-r border-gray-100 dark:border-[#1c1f2c] p-5 flex flex-col justify-between overflow-y-auto scrollbar-premium">
       {/* ─── MENU SECTION ─── */}
       <div className="flex flex-col gap-2">
         {menuItems
           .filter((item) => item.roles.includes(user?.role))
           .map((item) => {
-            const isActive = location.pathname === item.path;
+            // const isActive =
+            //   item.path === "/"
+            //     ? location.pathname === "/"
+            //     : location.pathname === item.path ||
+            //       location.pathname.startsWith(item.path + "/");
+
+            const isActive =
+              item.path === "/"
+                ? location.pathname === "/"
+                : item.path === "/users_save"
+                  ? location.pathname.startsWith("/users_save") ||
+                    location.pathname.startsWith("/saved")
+                  : location.pathname === item.path ||
+                    location.pathname.startsWith(item.path + "/");
+
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={toggleSidebar}
                 /* ⚡ FIX 2: Updated selection highlights to match your exact #3981FA brand system */
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                className={`flex items-center gap-3 px-[15px] py-[14px] rounded-xl text-sm font-semibold transition-all duration-150 ${
                   isActive
                     ? "bg-[#3981FA] text-white shadow-lg shadow-[#3981FA]/15"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#141722]/60 hover:text-gray-900 dark:hover:text-white"
@@ -189,9 +198,7 @@ function Aside_bar({ toggleSidebar }) {
           </div>
         </div>
       </div>
-      
     </div>
-    
   );
 }
 
