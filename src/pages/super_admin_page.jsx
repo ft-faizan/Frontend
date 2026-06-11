@@ -734,7 +734,7 @@ function Super_admin_page() {
               ${
                 activeTab === tab.id
                   ? "bg-[#3981FA] text-white font-bold"
-                  : "text-gray-500 hover:text-gray-300"
+                  : "text-gray-500 hover:text-[#3E82F5]"
               }`}
           >
             {tab.label}

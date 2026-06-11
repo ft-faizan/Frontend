@@ -7,7 +7,7 @@ const SidebarMenuItem = ({ item, isActive, toggleSidebar }) => {
       key={item.path}
       to={item.path}
       onClick={toggleSidebar}
-      className="relative group w-full h-[44px] flex items-center rounded-xl overflow-hidden active:scale-[0.98] transition-all duration-300 bg-[#3981FA] border border-[#3981FA]/50 text-white shadow-lg shadow-[#3981FA]/10"
+      className="relative group w-full h-[44px] flex items-center rounded-xl overflow-hidden active:scale-[0.98] transition-all duration-300 bg-white  text-white shadow-lg shadow-[#3981FA]/10"
     >
       <span
         className={`
@@ -20,7 +20,7 @@ const SidebarMenuItem = ({ item, isActive, toggleSidebar }) => {
 
       <span
         className={`
-          absolute left-[54px] font-semibold text-sm tracking-wide transition-all duration-300 z-0 text-white
+          absolute left-[54px] font-semibold text-sm tracking-wide transition-all duration-300 z-0 text-[#2D71E2]
           ${isActive ? "text-transparent translate-x-4" : "group-hover:text-transparent group-hover:translate-x-4"}
         `}
       >

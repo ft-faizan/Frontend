@@ -107,7 +107,7 @@ const styles = `
                 transform 0.2s cubic-bezier(0.4,0,0.2,1),
                 font-size 0.2s cubic-bezier(0.4,0,0.2,1),
                 color 0.2s cubic-bezier(0.4,0,0.2,1);
-    background: #fff; padding: 0 3px;
+    background:#F8FAFC; padding: 0 3px;
   }
   .fs-input {
     width: 100%; padding: 14px 14px 10px;
