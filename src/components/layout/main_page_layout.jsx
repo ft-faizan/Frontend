@@ -5,7 +5,8 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Nav_bar from "./nav_bar.jsx";
-import Aside_bar from "./aside_bar.jsx";
+// import Aside_bar from "./aside_bar.jsx";
+import AsideBar from "./aside_bar/AsideBar.jsx"
 import RecentToolsDock from "../reuseable_compo/RecentToolsDock.jsx";
 
 function Main_page_layout() {
@@ -38,7 +39,8 @@ function Main_page_layout() {
             z-100
           `}
         >
-          <Aside_bar toggleSidebar={closeSidebar} />
+          {/* <Aside_bar toggleSidebar={closeSidebar} /> */}
+          <AsideBar/>
         </div>
 
         {/* Overlay (mobile/tablet only) */}
