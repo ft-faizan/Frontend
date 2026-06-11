@@ -4,7 +4,7 @@ import Protected_route from "../components/role_base_routeing/protected_route.js
 import Sigin_siginup_page from "../pages/sigin_siginup_page.jsx";
 import Super_admin_page from "../pages/super_admin_page.jsx";
 import Admin_page from "../pages/admin_page.jsx";
-import Dashboard_page from "../pages/dashboard_page.jsx";
+// import Dashboard_page from "../pages/dashboard_page.jsx";
 import DashboardPage from "../pages/dashboard/DashboardPage.jsx"
 import Category_page from "../pages/category_page.jsx";
 import Category_folders_page from "../pages/category_folders_page.jsx";
