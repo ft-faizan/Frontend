@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser,registerUser,getMe } from "../../features/auth/authSlice.js";
 import { useToast } from "../../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { fetchSavedTools } from "../../features/savedTools/savedToolSlice";
 
 
 const styles = `
@@ -305,16 +306,36 @@ export default function Signin_signup_form({ showRole = false }) {
 
   
 
+// const handleLogin = async () => {
+//   const res = await dispatch(loginUser({ email, password }));
+
+//   if (loginUser.fulfilled.match(res)) {
+//     showToast("Login successful ✅", "success");
+
+//     // 🔥 VERY IMPORTANT (this fixes your bug)
+//     await dispatch(getMe()).unwrap();
+
+//     const user = res.payload?.user || res.payload;
+
+//     if (user.role === "superadmin") navigate("/super-admin");
+//     else if (user.role === "admin") navigate("/admin");
+//     else navigate("/");
+//   } else {
+//     showToast(res.payload, "error");
+//   }
+// };
 const handleLogin = async () => {
   const res = await dispatch(loginUser({ email, password }));
 
   if (loginUser.fulfilled.match(res)) {
     showToast("Login successful ✅", "success");
 
-    // 🔥 VERY IMPORTANT (this fixes your bug)
     await dispatch(getMe()).unwrap();
 
-    const user = res.payload?.user || res.payload;
+    // 🔥 Load this user's saved tools
+    await dispatch(fetchSavedTools());
+
+    const user = res.payload.user;
 
     if (user.role === "superadmin") navigate("/super-admin");
     else if (user.role === "admin") navigate("/admin");
@@ -323,7 +344,6 @@ const handleLogin = async () => {
     showToast(res.payload, "error");
   }
 };
-
 
 
 const handleRegister = async () => {

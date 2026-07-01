@@ -15,7 +15,7 @@ import { FaPlus } from "react-icons/fa";
 import { Users, UserCheck, Shield } from "lucide-react";
 import { Wrench, LayoutGrid } from "lucide-react";
 import { BarChart3, PieChart } from "lucide-react";
-
+import { getAllCategories } from "../features/categories/categorySlice.js";
 // ── Tab definitions ──────────────────────────────────────────
 const tabs = [
   { id: "dashboard", label: "Dashboard" },
@@ -445,8 +445,8 @@ function ToolContent({ setToolOpen, setToolEditData }) {
 
   // const { tools, loading, pages } = useSelector((state) => state.tools);
   const { tools, loading, pages } = useSelector((state) => state.tools);
-  const { categories } = useSelector((state) => state.categories);
-
+  // const { categories } = useSelector((state) => state.categories);
+   const { allCategories } = useSelector((state) => state.categories);
   // const [open, setOpen] = useState(false);
   // const [editData, setEditData] = useState(null);
 
@@ -460,6 +460,10 @@ function ToolContent({ setToolOpen, setToolEditData }) {
   // useEffect(() => {
   //   dispatch(getTools({ mode: "admin" }));
   // }, [dispatch]);
+
+  useEffect(() => {
+  dispatch(getAllCategories());
+}, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -504,7 +508,8 @@ function ToolContent({ setToolOpen, setToolEditData }) {
         <ToolFilters
           type="admin"
           filters={filters}
-          categories={categories}
+          // categories={categories}
+          categories={allCategories}
           onFilterChange={handleFilterChange}
           onClear={handleClearFilters}
         />

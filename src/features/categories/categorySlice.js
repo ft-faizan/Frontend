@@ -9,6 +9,21 @@ import {
 } from "./categoryAPI";
 import { getUserStatsAPI } from "./categoryAPI.js";
 
+export const getAllCategories = createAsyncThunk(
+  "categories/getAll",
+  async (_, thunkAPI) => {
+    try {
+      const res = await getCategoriesAPI({
+        all: true,
+      });
+
+      return res.data.categories;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message);
+    }
+  },
+);
+
 // 🔥 CREATE
 export const createCategory = createAsyncThunk(
   "categories/create",
@@ -98,6 +113,7 @@ const categorySlice = createSlice({
   name: "categories",
   initialState: {
     categories: [],
+    allCategories: [], //addd my me for new update
     loading: false,
     error: null,
     total: 0,
@@ -118,6 +134,11 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
+      .addCase(getAllCategories.fulfilled, (state, action) => {
+        state.allCategories = action.payload;                                         //new
+      })
+
       // 🔥 GET CATEGORIES
       .addCase(getCategories.pending, (state) => {
         state.loading = true;

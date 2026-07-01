@@ -45,19 +45,7 @@ const isSaving = useRef(false);
   // ── logic handlers — untouched ───────────────────────────────────────────
   const handleLeftClickAction = () => setModalOpen(true);
 
-  // const handleRightClickAction = (e) => {
-  //   e.preventDefault();
-  //   if (isSaved) {
-  //     dispatch(deleteSavedTool(savedEntry._id));
-  //     showToast("Tool removed from saved", "success");
-  //   } else {
-  //     const formData = new FormData();
-  //     formData.append("type", "platform");
-  //     formData.append("toolId", tool._id);
-  //     dispatch(saveTool(formData));
-  //     showToast("Tool saved successfully", "success");
-  //   }
-  // };
+  
 
   const handleRightClickAction = (e) => {
   e.preventDefault();
@@ -546,8 +534,6 @@ const isSaving = useRef(false);
 };
 
 export default ToolCard;
-
-
 
 
 

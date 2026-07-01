@@ -13,6 +13,7 @@ import ToolFilters from "../components/reuseable_compo/ToolFilters";
 import { Users, UserCheck, Shield } from "lucide-react";
 import { Wrench, LayoutGrid } from "lucide-react";
 import { BarChart3, PieChart } from "lucide-react";
+import { getAllCategories } from "../features/categories/categorySlice";
 // ── Tab definitions ──────────────────────────────────────────
 const tabs = [
   { id: "dashboard", label: "Dashboard" },
@@ -542,8 +543,8 @@ function ToolContent() {
   const { tools, loading, pages, stats } = useSelector((state) => state.tools);
 
   // 🔥 CATEGORIES
-  const { categories } = useSelector((state) => state.categories);
-
+  // const { categories } = useSelector((state) => state.categories);
+    const { allCategories } = useSelector((state) => state.categories);
   // 🔥 EMAIL USERS LIST
   // We reuse admin stats emails
   const users = stats?.toolStats || [];
@@ -565,6 +566,10 @@ function ToolContent() {
     category: "",
     email: "",
   });
+
+  useEffect(() => {
+  dispatch(getAllCategories());
+}, [dispatch]);
 
   // 🔥 FETCH TOOLS
   useEffect(() => {
@@ -633,7 +638,8 @@ function ToolContent() {
           <ToolFilters
             type="superadmin"
             filters={filters}
-            categories={categories}
+            // categories={categories}
+            categories={allCategories}
             users={users}
             onFilterChange={handleFilterChange}
             onClear={handleClearFilters}

@@ -82,7 +82,15 @@ export const moveSavedTool = createAsyncThunk(
 const savedToolSlice = createSlice({
   name: "savedTools",
   initialState: { savedItems: [], loading: false, error: null },
-  reducers: {},
+  // reducers: {},
+  reducers: {
+  clearSavedTools: (state) => {
+    state.savedItems = [];
+    state.loading = false;
+    state.error = null;
+  },
+},
+
   extraReducers: (builder) => {
     builder
       // FETCH
@@ -135,5 +143,7 @@ const savedToolSlice = createSlice({
       });
   },
 });
+
+export const { clearSavedTools } = savedToolSlice.actions;
 
 export default savedToolSlice.reducer;
