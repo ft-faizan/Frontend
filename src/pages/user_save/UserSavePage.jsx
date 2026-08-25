@@ -9,6 +9,7 @@ import {
 } from "../../features/savedTools/savedToolSlice";
 import {
   getFolders,
+  fetchDefaultFolder,
   deleteFolder,
   updateFolder,
   createFolder,
@@ -33,7 +34,7 @@ function UserSavePage() {
 
   // Redux state
   const { savedItems, loading } = useSelector((state) => state.savedTools);
-  const { folders } = useSelector((state) => state.folders);
+  const { folders, defaultFolder } = useSelector((state) => state.folders);
 
   // Local state
   const [activeTab, setActiveTab] = useState("saved_tools");
@@ -55,9 +56,9 @@ function UserSavePage() {
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [selectedFolderName, setSelectedFolderName] = useState("");
 
-  // Derived: default folder ID
-  const defaultFolder = folders.find((f) => f.name === "default");
-  const defaultFolderId = defaultFolder?._id;
+  // Derived: default folder ID (Independent of pagination, with fallback)
+  const defaultFolderId =
+    defaultFolder?._id || folders.find((f) => f.name === "default")?._id;
 
   // Custom hooks
   const { displayTools, dynamicCategories } = useToolFiltering(
@@ -75,6 +76,7 @@ function UserSavePage() {
   useEffect(() => {
     dispatch(fetchSavedTools());
     dispatch(getFolders());
+    dispatch(fetchDefaultFolder());
   }, [dispatch]);
 
   // Sync tab from navigation state

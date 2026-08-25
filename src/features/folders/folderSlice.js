@@ -106,13 +106,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { 
   getFoldersAPI, 
+  getDefaultFolderAPI,
   createFolderAPI, 
   deleteFolderAPI, 
   updateFolderAPI  
 } from "./folderAPI.js";
 import { moveSavedTool } from "../savedTools/savedToolSlice";
 
-// 1. Fetch Folders
+// 1. Fetch Folders (Paginated custom folders)
 export const getFolders = createAsyncThunk("folders/getFolders", async (params, thunkAPI) => {
   try {
     const res = await getFoldersAPI(params);
@@ -122,7 +123,17 @@ export const getFolders = createAsyncThunk("folders/getFolders", async (params, 
   }
 });
 
-// 2. Create Folder
+// 2. Fetch User Default Folder (Independent of pagination)
+export const fetchDefaultFolder = createAsyncThunk("folders/fetchDefaultFolder", async (_, thunkAPI) => {
+  try {
+    const res = await getDefaultFolderAPI();
+    return res.data.defaultFolder;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.message);
+  }
+});
+
+// 3. Create Folder
 export const createFolder = createAsyncThunk("folders/createFolder", async (name, thunkAPI) => {
   try {
     const res = await createFolderAPI(name);
@@ -132,7 +143,7 @@ export const createFolder = createAsyncThunk("folders/createFolder", async (name
   }
 });
 
-// 3. Delete Folder
+// 4. Delete Folder
 export const deleteFolder = createAsyncThunk("folders/deleteFolder", async (id, thunkAPI) => {
   try {
     await deleteFolderAPI(id);
@@ -142,7 +153,7 @@ export const deleteFolder = createAsyncThunk("folders/deleteFolder", async (id, 
   }
 });
 
-// 4. Update Folder
+// 5. Update Folder
 export const updateFolder = createAsyncThunk("folders/updateFolder", async ({ id, name }, thunkAPI) => {
   try {
     const res = await updateFolderAPI(id, name);
@@ -154,7 +165,7 @@ export const updateFolder = createAsyncThunk("folders/updateFolder", async ({ id
 
 const folderSlice = createSlice({
   name: "folders",
-  initialState: { folders: [], loading: false, error: null },
+  initialState: { folders: [], defaultFolder: null, loading: false, error: null },
   reducers: {},
 
   extraReducers: (builder) => {
@@ -162,6 +173,10 @@ const folderSlice = createSlice({
       // GET FOLDERS
       .addCase(getFolders.fulfilled, (state, action) => {
         state.folders = action.payload.folders;
+      })
+      // FETCH DEFAULT FOLDER (INDEPENDENT)
+      .addCase(fetchDefaultFolder.fulfilled, (state, action) => {
+        state.defaultFolder = action.payload;
       })
       // CREATE FOLDER
       .addCase(createFolder.fulfilled, (state, action) => {

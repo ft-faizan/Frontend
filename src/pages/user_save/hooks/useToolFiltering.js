@@ -6,7 +6,12 @@ export function useToolFiltering(savedItems, defaultFolderId, filters) {
     return savedItems.filter((item) => {
       const folderIdValue =
         typeof item.folderId === "string" ? item.folderId : item.folderId?._id;
-      const isInDefault = !item.folderId || folderIdValue === defaultFolderId;
+      const folderName =
+        typeof item.folderId === "object" ? item.folderId?.name : null;
+      const isInDefault =
+        !item.folderId ||
+        (defaultFolderId && folderIdValue === defaultFolderId) ||
+        folderName === "default";
       if (!isInDefault) return false;
 
       const toolName =
@@ -29,7 +34,13 @@ export function useToolFiltering(savedItems, defaultFolderId, filters) {
     const toolsInView = savedItems.filter((item) => {
       const folderIdValue =
         typeof item.folderId === "string" ? item.folderId : item.folderId?._id;
-      return !item.folderId || folderIdValue === defaultFolderId;
+      const folderName =
+        typeof item.folderId === "object" ? item.folderId?.name : null;
+      return (
+        !item.folderId ||
+        (defaultFolderId && folderIdValue === defaultFolderId) ||
+        folderName === "default"
+      );
     });
 
     const cats = toolsInView

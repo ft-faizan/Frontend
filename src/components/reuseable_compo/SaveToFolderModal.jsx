@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFolders } from "../../features/folders/folderSlice";
+import { getFolders, fetchDefaultFolder } from "../../features/folders/folderSlice";
 import {
   saveTool,
   moveSavedTool,
@@ -18,9 +18,9 @@ import {
 
 const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
   const dispatch = useDispatch();
-  const { folders } = useSelector((state) => state.folders);
+  const { folders, defaultFolder } = useSelector((state) => state.folders);
   const isMoving = !!savedEntry;
-  const hasDefaultFolder = folders.some((f) => f.type === "default");
+  const hasDefaultFolder = !!defaultFolder || folders.some((f) => f.type === "default");
   const [searchTerm, setSearchTerm] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const { showToast } = useToast();
@@ -29,6 +29,7 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
   useEffect(() => {
     if (open) {
       dispatch(getFolders());
+      dispatch(fetchDefaultFolder());
       setSearchTerm("");
       setNewFolderName("");
       isSaving.current = false;
@@ -38,7 +39,12 @@ const SaveToFolderModal = ({ open, onClose, tool, savedEntry }) => {
   if (!open) return null;
 
   // Filter folders based on user search and sort with default first
-  const filteredFolders = folders
+  const allModalFolders =
+    defaultFolder && !folders.some((f) => f._id === defaultFolder._id)
+      ? [defaultFolder, ...folders]
+      : folders;
+
+  const filteredFolders = allModalFolders
     .filter((f) => f.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
       if (a.type === "default" && b.type !== "default") return -1;
